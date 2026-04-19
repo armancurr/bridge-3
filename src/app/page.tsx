@@ -1,3 +1,14 @@
+import {
+  DiscordLogo,
+  FacebookLogo,
+  GithubLogo,
+  LinkedinLogo,
+  MediumLogo,
+  RedditLogo,
+  TelegramLogo,
+  XLogo,
+} from "@phosphor-icons/react/dist/ssr";
+
 export default function Home() {
   const navLinks = [
     { label: "Developers" },
@@ -6,14 +17,26 @@ export default function Home() {
   ];
 
   const socialLinks = [
-    { label: "Telegram", icon: <TelegramIcon /> },
-    { label: "X", icon: <XIcon /> },
-    { label: "Discord", icon: <DiscordIcon /> },
-    { label: "GitHub", icon: <GitHubIcon /> },
-    { label: "Medium", icon: <MediumIcon /> },
-    { label: "Facebook", icon: <FacebookIcon /> },
-    { label: "Reddit", icon: <RedditIcon /> },
-    { label: "LinkedIn", icon: <LinkedInIcon /> },
+    {
+      label: "Telegram",
+      icon: <TelegramLogo weight="fill" className="size-5" />,
+    },
+    { label: "X", icon: <XLogo weight="fill" className="size-5" /> },
+    {
+      label: "Discord",
+      icon: <DiscordLogo weight="fill" className="size-5" />,
+    },
+    { label: "GitHub", icon: <GithubLogo weight="fill" className="size-5" /> },
+    { label: "Medium", icon: <MediumLogo weight="fill" className="size-5" /> },
+    {
+      label: "Facebook",
+      icon: <FacebookLogo weight="fill" className="size-5" />,
+    },
+    { label: "Reddit", icon: <RedditLogo weight="fill" className="size-5" /> },
+    {
+      label: "LinkedIn",
+      icon: <LinkedinLogo weight="fill" className="size-5" />,
+    },
   ];
 
   return (
@@ -106,18 +129,6 @@ export default function Home() {
                 className="min-w-[94px] bg-[#242833] px-6 text-[14px] leading-[18px] text-[#e6ede4]"
               >
                 Market
-              </button>
-              <button
-                type="button"
-                className="min-w-[79px] px-6 text-[14px] leading-[18px] text-[#a7ada5]"
-              >
-                Limit
-              </button>
-              <button
-                type="button"
-                className="min-w-[74px] px-6 text-[14px] leading-[18px] text-[#a7ada5]"
-              >
-                P2P
               </button>
             </div>
 
@@ -287,15 +298,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
-      <div className="fixed bottom-[46px] right-[18px] flex items-center gap-4">
-        <FloatingButton>
-          <HeadphonesIcon className="size-5 text-[#d5d931]" />
-        </FloatingButton>
-        <FloatingButton>
-          <ChatIcon className="size-5 text-[#d5d931]" />
-        </FloatingButton>
-      </div>
     </div>
   );
 }
@@ -324,17 +326,6 @@ function IconSquareButton({
     <button
       type="button"
       className={`flex size-10 items-center justify-center rounded-[4px] border border-[#1f242f] ${muted ? "text-[#66706b]" : "text-[#e6ede4]"}`}
-    >
-      {children}
-    </button>
-  );
-}
-
-function FloatingButton({ children }: { children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      className="flex size-12 items-center justify-center rounded-[4px] border border-[#1f242f] bg-[#03111c] shadow-[0_0_0_1px_rgba(31,36,47,0.2)]"
     >
       {children}
     </button>
@@ -469,130 +460,6 @@ function CheckIcon({ className }: { className?: string }) {
     <Svg className={className}>
       <path d="m5 12 4 4 10-10" />
     </Svg>
-  );
-}
-
-function HeadphonesIcon({ className }: { className?: string }) {
-  return (
-    <Svg className={className}>
-      <path d="M4 13a8 8 0 0 1 16 0" />
-      <path d="M4 13v4a2 2 0 0 0 2 2h2v-7H6a2 2 0 0 0-2 2Z" />
-      <path d="M20 13v4a2 2 0 0 1-2 2h-2v-7h2a2 2 0 0 1 2 2Z" />
-    </Svg>
-  );
-}
-
-function ChatIcon({ className }: { className?: string }) {
-  return (
-    <Svg className={className}>
-      <path d="M5 6h14v10H9l-4 3z" />
-      <path d="M8 10h8" />
-      <path d="M8 13h6" />
-    </Svg>
-  );
-}
-
-function TelegramIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="size-5"
-      aria-hidden="true"
-    >
-      <path d="m21.7 4.4-3 14.2c-.2 1-1 1.2-1.7.8l-4.6-3.4-2.2 2.2c-.2.2-.4.4-.9.4l.3-4.7 8.7-7.8c.4-.4-.1-.6-.6-.3L7 12.5 2.5 11c-1-.3-1-1 0-1.4l17.5-6.8c.8-.3 1.5.2 1.2 1.6Z" />
-    </svg>
-  );
-}
-
-function XIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="size-5"
-      aria-hidden="true"
-    >
-      <path d="M18.9 3H22l-6.8 7.8L23 21h-6.2l-4.8-6.3L6.5 21H3.4l7.3-8.4L1 3h6.3l4.4 5.8zM17.8 19h1.7L6.3 4.9H4.5z" />
-    </svg>
-  );
-}
-
-function DiscordIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="size-5"
-      aria-hidden="true"
-    >
-      <path d="M20 5.5A16.4 16.4 0 0 0 15.9 4l-.2.4a11 11 0 0 1 3.2 1.6 11.4 11.4 0 0 0-6.9-2.1A11.4 11.4 0 0 0 5 6a11 11 0 0 1 3.3-1.6L8 4A16.4 16.4 0 0 0 4 5.5C1.4 9.3.7 13 1 16.7A16.6 16.6 0 0 0 6 19.2l1.2-1.9c-.7-.3-1.4-.7-2-1.1l.5-.4a11.9 11.9 0 0 0 12.5 0l.5.4c-.6.4-1.3.8-2 1.1l1.2 1.9a16.6 16.6 0 0 0 5-2.5c.4-4.3-.6-7.9-2.9-11.2ZM9.5 14.4c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm5 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z" />
-    </svg>
-  );
-}
-
-function GitHubIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="size-5"
-      aria-hidden="true"
-    >
-      <path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6V21c-3.3.7-4-1.4-4-1.4-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.7.1-.7 1 .1 1.7 1.1 1.7 1.1 1 .1 1.9-.8 2.2-1.2.1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.4-5.5-6a4.7 4.7 0 0 1 1.2-3.2 4.4 4.4 0 0 1 .1-3.2s1-.3 3.3 1.2a11.2 11.2 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2a4.4 4.4 0 0 1 .1 3.2 4.7 4.7 0 0 1 1.2 3.2c0 4.6-2.8 5.7-5.5 6 .4.3.8 1 .8 2.1v3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z" />
-    </svg>
-  );
-}
-
-function MediumIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="size-5"
-      aria-hidden="true"
-    >
-      <path d="M2 6.5 3.4 8v8.1L2 17.5v.3h5.6v-.3l-1.4-1.4V8.7l4.2 9.1h.5l3.6-9.1v8.9l-1.2 1.1v.3H20v-.3l-1.2-1.1V6.4L20 5.2V5h-4.5L12.3 13 9 5H4z" />
-    </svg>
-  );
-}
-
-function FacebookIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="size-5"
-      aria-hidden="true"
-    >
-      <path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4h1.5V5.5a19.1 19.1 0 0 0-2.2-.1c-2.2 0-3.7 1.3-3.7 3.9v1.9H8V14h2.5v7z" />
-    </svg>
-  );
-}
-
-function RedditIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="size-5"
-      aria-hidden="true"
-    >
-      <path d="M14.7 8.3 15.4 5l2.3.5a1.5 1.5 0 1 0 .3-1l-2.8-.6a.6.6 0 0 0-.7.5l-.8 3.7a7.9 7.9 0 0 0-7 1.1 1.7 1.7 0 1 0-1 3.1v.2c0 3 2.8 5.5 6.3 5.5s6.3-2.5 6.3-5.5v-.2a1.7 1.7 0 1 0-1-3.1 7.8 7.8 0 0 0-3.6-1Zm-4 4.7a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm4.8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm-5 2.4a3.2 3.2 0 0 0 3 1.5 3.3 3.3 0 0 0 3-1.5.4.4 0 0 0-.4-.6h-5.2a.4.4 0 0 0-.4.6Z" />
-    </svg>
-  );
-}
-
-function LinkedInIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="size-5"
-      aria-hidden="true"
-    >
-      <path d="M4.98 3.5A1.75 1.75 0 1 0 5 7a1.75 1.75 0 0 0-.02-3.5ZM3.5 8.5h3V20h-3zM9 8.5h2.9v1.6h.1c.4-.8 1.4-1.9 3-1.9 3.2 0 3.8 2.1 3.8 4.8V20h-3v-6c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3V20H9z" />
-    </svg>
   );
 }
 
