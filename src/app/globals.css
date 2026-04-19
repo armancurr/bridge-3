@@ -1,20 +1,108 @@
 @import "tailwindcss";
 
+/*
+  Light theme: lavender (#c8aff0) + deep plum (#682760) family.
+  Supporting hues: mauve, dusty lilac, soft orchid — warm, readable light UI.
+*/
+
 :root {
-  --background: #03111c;
-  --foreground: #e6ede4;
-  --muted: #a7ada5;
-  --line: #1f242f;
-  --panel: #161b26;
-  --panel-2: #1c212c;
-  --primary: #d5d931;
-  --primary-dark: #03111c;
-  --success: #71831f;
+  /* Canvas & type — page wash is brand lavender */
+  --background: #c8aff0;
+  --foreground: #2a1628;
+
+  --muted: #6b5a78;
+  --muted-foreground: #4f3f5c;
+  --subtle: #7d6d8a;
+
+  /* Hairlines & dividers (read against #c8aff0) */
+  --line: #b89adb;
+  --line-2: #a884cf;
+
+  /* Layered surfaces — lighter steps so cards/inputs float on the wash */
+  --panel: #f7f2fc;
+  --panel-2: #ede4f7;
+  --panel-3: #e2d6f2;
+  --surface-inset: #e8dcf5;
+
+  /* Brand ramp — anchors #c8aff0 → #682760 */
+  --primary: #c8aff0;
+  --primary-hover: #b89ae8;
+  --primary-light: #ebe2f7;
+  --primary-muted: #ded0ef;
+  --primary-dark: #9469b8;
+  --primary-darker: #682760;
+  --primary-deep: #4a1d44;
+
+  /* Mauve / orchid accents (same family, more rose) */
+  --accent: #c9a3c4;
+  --accent-light: #f0e4ee;
+  --accent-dark: #8f4a78;
+
+  /* CTAs: plum fills so buttons stay visible on #c8aff0 bg */
+  --cta: #682760;
+  --cta-foreground: #fefbff;
+  --cta-strong: #4a1d44;
+  --cta-strong-foreground: #fefbff;
+
+  /* Status — tinted to stay in the plum/lavender orbit */
+  --success: #7d6a94;
+  --success-light: #ebe4f3;
+  --warning: #c49a6e;
+  --warning-light: #f7efe4;
+  --error: #b45d7c;
+  --error-light: #f5e5ec;
+
+  --border: var(--line);
+  --border-light: #d4c0ea;
+
+  --shadow: rgba(74, 29, 68, 0.12);
+  --shadow-md: rgba(74, 29, 68, 0.16);
+  --shadow-lg: rgba(74, 29, 68, 0.2);
+
+  --icon-muted: #5c4a68;
+
+  /* Token chips / gradients (reference in arbitrary values) */
+  --gradient-token-a: #e4cff8;
+  --gradient-token-b: #9d6eb8;
+  --gradient-token-c: #682760;
+  --gradient-token-ring: #f2e9fa;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle: var(--subtle);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-panel-3: var(--panel-3);
+  --color-surface-inset: var(--surface-inset);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-light: var(--primary-light);
+  --color-primary-muted: var(--primary-muted);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-darker: var(--primary-darker);
+  --color-primary-deep: var(--primary-deep);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-dark: var(--accent-dark);
+  --color-cta: var(--cta);
+  --color-cta-foreground: var(--cta-foreground);
+  --color-cta-strong: var(--cta-strong);
+  --color-cta-strong-foreground: var(--cta-strong-foreground);
+  --color-success: var(--success);
+  --color-success-light: var(--success-light);
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+  --color-error: var(--error);
+  --color-error-light: var(--error-light);
+  --color-border: var(--border);
+  --color-border-light: var(--border-light);
+  --color-icon-muted: var(--icon-muted);
   --font-sans: var(--font-onest);
 }
 

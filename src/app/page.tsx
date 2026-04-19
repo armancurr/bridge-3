@@ -41,13 +41,13 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-1 flex-col bg-background text-foreground">
-      <header className="border-b border-[#1f242f] px-[18px]">
+      <header className="border-b border-line px-[18px]">
         <div className="mx-auto flex h-[72px] w-full max-w-[1884px] items-center gap-8">
           <div className="flex shrink-0 items-center gap-3">
-            <div className="flex size-7 items-center justify-center rounded-full bg-[#d5d931] text-[#03111c]">
+            <div className="flex size-7 items-center justify-center rounded-full bg-primary-darker text-primary-light">
               <BridgeGlyph className="size-4" />
             </div>
-            <div className="text-[18px] font-semibold leading-none tracking-[-0.02em] text-[#f3f7ef]">
+            <div className="text-[18px] font-semibold leading-none tracking-[-0.02em] text-foreground">
               BridgeFlow
             </div>
           </div>
@@ -58,11 +58,11 @@ export default function Home() {
                 <button
                   key={link.label}
                   type="button"
-                  className="flex items-center gap-[6px] hover:text-white"
+                  className="flex items-center gap-[6px] hover:text-primary-darker"
                 >
                   <span>{link.label}</span>
                   {link.caret ? (
-                    <ChevronDownIcon className="size-4 text-[#8d958d]" />
+                    <ChevronDownIcon className="size-4 text-icon-muted" />
                   ) : null}
                 </button>
               ))}
@@ -71,9 +71,9 @@ export default function Home() {
                 type="button"
                 className="flex items-center gap-[6px] text-base leading-4"
               >
-                <SunburstIcon className="size-4 text-[#d5d931]" />
+                <SunburstIcon className="size-4 text-primary-darker" />
                 <span>BRG</span>
-                <ArrowUpRightIcon className="size-4 text-[#8d958d]" />
+                <ArrowUpRightIcon className="size-4 text-icon-muted" />
               </button>
             </div>
 
@@ -81,21 +81,21 @@ export default function Home() {
               <button type="button">Refer</button>
               <button
                 type="button"
-                className="flex items-center gap-[6px] text-[#d5d931]"
+                className="flex items-center gap-[6px] text-primary-darker"
               >
                 <span>Points</span>
                 <TrophyIcon className="size-4" />
               </button>
               <button
                 type="button"
-                className="flex h-10 items-center justify-center gap-2 rounded-[4px] bg-[#d5d931] px-4 text-[14px] leading-[18px] text-[#03111c]"
+                className="flex h-10 items-center justify-center gap-2 rounded-[4px] bg-cta px-4 text-[14px] leading-[18px] text-cta-foreground"
               >
                 <WalletIcon className="size-4" />
                 <span>Connect wallet</span>
               </button>
               <button
                 type="button"
-                className="flex size-10 items-center justify-center rounded-[4px] border border-[#1f242f] text-[#e6ede4]"
+                className="flex size-10 items-center justify-center rounded-[4px] border border-line text-foreground"
               >
                 <MoreVerticalIcon className="size-4" />
               </button>
@@ -105,14 +105,14 @@ export default function Home() {
           <div className="ml-auto flex items-center gap-2 lg:hidden">
             <button
               type="button"
-              className="flex h-10 items-center justify-center gap-2 rounded-[4px] bg-[#d5d931] px-4 text-[14px] leading-[18px] text-[#03111c]"
+              className="flex h-10 items-center justify-center gap-2 rounded-[4px] bg-cta px-4 text-[14px] leading-[18px] text-cta-foreground"
             >
               <WalletIcon className="size-4" />
               <span>Connect wallet</span>
             </button>
             <button
               type="button"
-              className="flex size-10 items-center justify-center rounded-[4px] border border-[#1f242f] text-[#e6ede4]"
+              className="flex size-10 items-center justify-center rounded-[4px] border border-line text-foreground"
             >
               <MoreVerticalIcon className="size-4" />
             </button>
@@ -123,10 +123,10 @@ export default function Home() {
       <main className="flex flex-1 flex-col px-[18px] pb-8 pt-6">
         <div className="mx-auto w-full max-w-[500px]">
           <div className="mb-[22px] flex items-center justify-between gap-3">
-            <div className="flex h-10 overflow-hidden rounded-[4px] border border-[#1f242f] bg-transparent">
+            <div className="flex h-10 overflow-hidden rounded-[4px] border border-line bg-transparent">
               <button
                 type="button"
-                className="min-w-[94px] bg-[#242833] px-6 text-[14px] leading-[18px] text-[#e6ede4]"
+                className="min-w-[94px] bg-panel-2 px-6 text-[14px] leading-[18px] text-foreground"
               >
                 Market
               </button>
@@ -145,28 +145,28 @@ export default function Home() {
             </div>
           </div>
 
-          <section className="rounded-[8px] border border-[#1f242f] p-4">
+          <section className="rounded-[8px] border border-line p-4">
             <div className="mb-2 flex items-center justify-between text-[14px] leading-[18px]">
               <div className="font-medium">You pay</div>
-              <div className="text-[#a7ada5]">Balance: 0 USDC</div>
+              <div className="text-muted-foreground">Balance: 0 USDC</div>
             </div>
-            <div className="flex h-[60px] overflow-hidden rounded-[4px] border border-[#1f242f] bg-[#161b26]">
+            <div className="flex h-[60px] overflow-hidden rounded-[4px] border border-line bg-surface-inset">
               <button
                 type="button"
-                className="flex w-[124px] items-center gap-3 border-r border-[#1f242f] px-4 text-left text-base leading-4"
+                className="flex w-[124px] items-center gap-3 border-r border-line px-4 text-left text-base leading-4"
               >
                 <div className="relative shrink-0">
-                  <span className="block size-7 rounded-full bg-[radial-gradient(circle_at_30%_30%,#66b7ff_0%,#2d75ef_50%,#0d3772_100%)]" />
-                  <span className="absolute -right-1 -top-1 block size-3.5 rounded-full border border-[#161b26] bg-[linear-gradient(135deg,#8ec5ff_0%,#3e7dfb_55%,#0f1633_56%,#ffffff_100%)]" />
+                  <span className="block size-7 rounded-full bg-[radial-gradient(circle_at_30%_30%,#e4cff8_0%,#9d6eb8_50%,#682760_100%)]" />
+                  <span className="absolute -right-1 -top-1 block size-3.5 rounded-full border border-surface-inset bg-[linear-gradient(135deg,#dcc9f2_0%,#a67fc8_55%,#4a1d44_56%,#ffffff_100%)]" />
                 </div>
                 <span>USDC</span>
-                <ChevronDownIcon className="ml-auto size-4 text-[#8d958d]" />
+                <ChevronDownIcon className="ml-auto size-4 text-icon-muted" />
               </button>
               <input
                 readOnly
                 value="0"
                 aria-label="You pay amount"
-                className="h-full flex-1 bg-transparent px-4 text-base leading-[22px] text-[#e6ede4] outline-none"
+                className="h-full flex-1 bg-transparent px-4 text-base leading-[22px] text-foreground outline-none"
               />
             </div>
           </section>
@@ -174,65 +174,65 @@ export default function Home() {
           <div className="flex justify-center py-[10px]">
             <button
               type="button"
-              className="flex size-10 items-center justify-center rounded-[4px] border border-[#1f242f] bg-[#03111c] text-[#e6ede4]"
+              className="flex size-10 items-center justify-center rounded-[4px] border border-line bg-primary-darker text-cta-strong-foreground"
             >
               <SwapIcon className="size-4" />
             </button>
           </div>
 
-          <section className="rounded-[8px] border border-[#1f242f] p-4">
+          <section className="rounded-[8px] border border-line p-4">
             <div className="mb-2 flex items-center justify-between text-[14px] leading-[18px]">
               <div className="font-medium">You receive</div>
-              <div className="text-[#a7ada5]">Balance: 0 SOL</div>
+              <div className="text-muted-foreground">Balance: 0 SOL</div>
             </div>
-            <div className="flex h-[60px] overflow-hidden rounded-[4px] border border-[#1f242f] bg-[#161b26]">
+            <div className="flex h-[60px] overflow-hidden rounded-[4px] border border-line bg-surface-inset">
               <button
                 type="button"
-                className="flex w-[124px] items-center gap-3 border-r border-[#1f242f] px-4 text-left text-base leading-4"
+                className="flex w-[124px] items-center gap-3 border-r border-line px-4 text-left text-base leading-4"
               >
                 <div className="relative shrink-0">
-                  <span className="block size-7 rounded-full bg-[linear-gradient(160deg,#30f0b0_0%,#60e3ff_45%,#7d55ff_100%)]" />
-                  <span className="absolute -right-1 -top-1 block size-3.5 rounded-full border border-[#161b26] bg-[linear-gradient(160deg,#30f0b0_0%,#60e3ff_45%,#7d55ff_100%)]" />
+                  <span className="block size-7 rounded-full bg-[linear-gradient(160deg,#c8aff0_0%,#a878c8_45%,#682760_100%)]" />
+                  <span className="absolute -right-1 -top-1 block size-3.5 rounded-full border border-surface-inset bg-[linear-gradient(160deg,#c8aff0_0%,#a878c8_45%,#682760_100%)]" />
                 </div>
                 <span>SOL</span>
-                <ChevronDownIcon className="ml-auto size-4 text-[#8d958d]" />
+                <ChevronDownIcon className="ml-auto size-4 text-icon-muted" />
               </button>
               <input
                 readOnly
                 value="0"
                 aria-label="You receive amount"
-                className="h-full flex-1 bg-transparent px-4 text-base leading-[22px] text-[#e6ede4] outline-none"
+                className="h-full flex-1 bg-transparent px-4 text-base leading-[22px] text-foreground outline-none"
               />
             </div>
           </section>
 
-          <div className="mt-2 flex items-center justify-between rounded-[8px] border border-[#1f242f] px-4 py-[15px]">
-            <div className="rounded-[4px] bg-[#28330d] px-[10px] py-[4px] text-[12px] leading-[14px] tracking-[0.12em] text-[#d5d931]">
+          <div className="mt-2 flex items-center justify-between rounded-[8px] border border-line px-4 py-[15px]">
+            <div className="rounded-[4px] bg-primary-light px-[10px] py-[4px] text-[12px] leading-[14px] tracking-[0.12em] text-primary-darker">
               + 0 POINTS
             </div>
             <button
               type="button"
-              className="flex items-center gap-2 rounded-[4px] bg-[#242833] px-3 py-[5px] text-[14px] leading-[18px] text-[#e6ede4]"
+              className="flex items-center gap-2 rounded-[4px] bg-panel-2 px-3 py-[5px] text-[14px] leading-[18px] text-foreground"
             >
               <span>ETA: 1 sec</span>
-              <ChevronDownIcon className="size-4 text-[#8d958d]" />
+              <ChevronDownIcon className="size-4 text-icon-muted" />
             </button>
           </div>
 
-          <section className="mt-2 rounded-[8px] border border-[#1f242f]">
+          <section className="mt-2 rounded-[8px] border border-line">
             <div className="flex items-center justify-between px-4 py-4">
-              <div className="flex items-center gap-3 text-[14px] leading-[18px] text-[#e6ede4]">
-                <span className="flex size-5 items-center justify-center rounded-[4px] bg-[#71831f] text-[#03111c]">
+              <div className="flex items-center gap-3 text-[14px] leading-[18px] text-foreground">
+                <span className="flex size-5 items-center justify-center rounded-[4px] bg-primary-darker text-cta-strong-foreground">
                   <CheckIcon className="size-3.5" />
                 </span>
                 <span>Trade and Send to Another Address</span>
               </div>
               <button
                 type="button"
-                className="flex items-center gap-2 py-[2px] text-[14px] leading-[18px] text-[#e6ede4]"
+                className="flex items-center gap-2 py-[2px] text-[14px] leading-[18px] text-foreground"
               >
                 <span>Routing</span>
-                <ChevronDownIcon className="size-4 text-[#8d958d]" />
+                <ChevronDownIcon className="size-4 text-icon-muted" />
               </button>
             </div>
 
@@ -241,13 +241,13 @@ export default function Home() {
                 readOnly
                 value=""
                 placeholder="Enter Solana address *"
-                className="mb-3 h-10 w-full rounded-[4px] border border-[#1f242f] bg-transparent px-4 text-[14px] leading-[18px] text-[#e6ede4] outline-none placeholder:text-[#6d756f]"
+                className="mb-3 h-10 w-full rounded-[4px] border border-line bg-transparent px-4 text-[14px] leading-[18px] text-foreground outline-none placeholder:text-muted-foreground"
               />
 
-              <div className="flex items-center gap-3 text-[#8d958d]">
+              <div className="flex items-center gap-3 text-icon-muted">
                 <button
                   type="button"
-                  className="flex h-6 items-center gap-2 rounded-[4px] bg-[#242833] px-3 text-[14px] leading-[18px] text-[#e6ede4]"
+                  className="flex h-6 items-center gap-2 rounded-[4px] bg-panel-2 px-3 text-[14px] leading-[18px] text-foreground"
                 >
                   <WalletIcon className="size-3.5" />
                   <span>Connect</span>
@@ -259,39 +259,39 @@ export default function Home() {
 
           <button
             type="button"
-            className="mt-[14px] h-10 w-full rounded-[4px] bg-[#d5d931] text-[14px] leading-[18px] text-[#03111c]"
+            className="mt-[14px] h-10 w-full rounded-[4px] bg-cta text-[14px] leading-[18px] text-cta-foreground"
           >
             Connect wallet
           </button>
         </div>
       </main>
 
-      <footer className="border-t border-[#1f242f] px-[18px] py-7">
+      <footer className="border-t border-line px-[18px] py-7">
         <div className="mx-auto flex w-full max-w-[1884px] flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
-          <div className="flex flex-col gap-3 text-[16px] leading-4 text-[#e6ede4]">
+          <div className="flex flex-col gap-3 text-[16px] leading-4 text-foreground">
             <div className="flex items-center gap-4">
               <button type="button">Careers</button>
               <button type="button">Brand Assets</button>
             </div>
-            <div className="text-[14px] leading-[18px] text-[#e6ede4]">
+            <div className="text-[14px] leading-[18px] text-muted-foreground">
               © 2026 BridgeFlow. All rights reserved.
             </div>
           </div>
 
           <div className="flex flex-col items-start gap-3 lg:items-end">
-            <div className="flex items-center gap-4 text-[#e6ede4]">
+            <div className="flex items-center gap-4 text-foreground">
               {socialLinks.map((link) => (
                 <button
                   key={link.label}
                   type="button"
                   aria-label={link.label}
-                  className="text-[#e6ede4] transition-opacity hover:opacity-80"
+                  className="text-foreground transition-opacity hover:opacity-80"
                 >
                   {link.icon}
                 </button>
               ))}
             </div>
-            <div className="flex items-center gap-6 text-[14px] leading-[18px] text-[#e6ede4]">
+            <div className="flex items-center gap-6 text-[14px] leading-[18px] text-muted-foreground">
               <button type="button">Terms of Service</button>
               <button type="button">Privacy Policy</button>
             </div>
@@ -325,7 +325,7 @@ function IconSquareButton({
   return (
     <button
       type="button"
-      className={`flex size-10 items-center justify-center rounded-[4px] border border-[#1f242f] ${muted ? "text-[#66706b]" : "text-[#e6ede4]"}`}
+      className={`flex size-10 items-center justify-center rounded-[4px] border border-line ${muted ? "text-muted-foreground" : "text-foreground"}`}
     >
       {children}
     </button>
