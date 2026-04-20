@@ -211,7 +211,7 @@ export default function Home() {
       <main className="flex flex-1 flex-col px-[18px] pb-8 pt-6 lg:py-10">
         <div className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col lg:justify-center">
           <div className="mx-auto flex flex-1 flex-col gap-6 lg:min-h-[640px] lg:flex-row lg:items-start lg:justify-center lg:gap-12">
-            <div className="order-1 w-full shrink-0 transition-transform duration-500 ease-out lg:w-[500px]">
+            <div className="order-1 w-full shrink-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] lg:w-[500px]">
               <div className="w-full">
                 <div className="mb-[22px] flex items-center justify-between gap-3">
                   <div className="flex h-10 overflow-hidden rounded-[4px] border border-line bg-transparent">
@@ -365,13 +365,19 @@ export default function Home() {
 
             <section
               aria-hidden={!isChartOpen}
-              className={`order-2 overflow-hidden transition-[max-height,opacity,max-width,transform,margin] duration-500 ease-out ${
+              className={`order-2 origin-left overflow-hidden transition-[max-height,opacity,max-width,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 isChartOpen
-                  ? "max-h-[620px] opacity-100 lg:max-h-none lg:w-[720px] lg:max-w-[720px] lg:translate-x-0"
-                  : "max-h-0 opacity-0 lg:max-h-none lg:w-0 lg:max-w-0 lg:translate-x-10"
+                  ? "max-h-[620px] opacity-100 lg:max-h-none lg:w-[720px] lg:max-w-[720px] lg:translate-x-0 lg:scale-x-100"
+                  : "max-h-0 opacity-0 lg:max-h-none lg:w-0 lg:max-w-0 lg:translate-x-6 lg:scale-x-95"
               }`}
             >
-              <div className="flex h-[520px] min-h-0 flex-col overflow-hidden rounded-[12px] border border-line bg-panel shadow-[0_16px_48px_var(--shadow)] lg:h-[652px]">
+              <div
+                className={`flex h-[520px] min-h-0 flex-col overflow-hidden rounded-[12px] border border-line bg-panel shadow-[0_16px_48px_var(--shadow)] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] lg:h-[652px] ${
+                  isChartOpen
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-2"
+                }`}
+              >
                 <div className="flex items-center justify-between gap-4 border-b border-line px-4 py-3">
                   <div>
                     <div className="text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
