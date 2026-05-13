@@ -23,8 +23,6 @@
 # package manager locks
 bun.lock
 
-# local snapshots
-public/squidrouter-source.html
 
 # misc
 .DS_Store
