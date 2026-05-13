@@ -31,11 +31,23 @@ export async function GET() {
     .replaceAll("href='https://app.squidrouter.com/'", "href='/bridge'")
     .replaceAll("href='https://app.squidrouter.com'", "href='/bridge'");
 
-  // Swap hero image asset used by the snapshot landing page.
-  const heroPatchedHtml = bridgePatchedHtml.replaceAll(
-    "hero-composite.png",
-    "7356fd7d-d9de-4b61-9b9e-6dc63b7e58a4.png"
-  );
+  const titlePatchedHtml = bridgePatchedHtml
+    .replaceAll(
+      "Squid - Bridge, Swap &amp; Build Across 100+ Chains",
+      "BWICK Bridge"
+    )
+    .replaceAll(
+      "Squid - Bridge, Swap & Build Across 100+ Chains",
+      "BWICK Bridge"
+    );
+
+  // Cover filename-based references if the snapshot changes later.
+  const heroPatchedHtml = titlePatchedHtml
+    .replaceAll(
+      "hero-composite.png",
+      "7356fd7d-d9de-4b61-9b9e-6dc63b7e58a4.png"
+    )
+    .replaceAll("bg-hero.png", "new-bg-hero.png");
 
   // Keep the landing page fully local: rewrite the few remaining external assets
   // (an OG image + CSS + fonts) to their checked-in copies in /public.

@@ -36,6 +36,25 @@
       });
   }
 
+  function swapLandingImages() {
+    document.querySelectorAll("img").forEach((img) => {
+      const className = typeof img.className === "string" ? img.className : "";
+
+      if (
+        className.includes("absolute top-0 left-0 w-full h-full object-cover")
+      ) {
+        img.setAttribute("src", "/new-bg-hero.png");
+        return;
+      }
+
+      if (className.includes("w-full !h-auto")) {
+        img.setAttribute("src", "/7356fd7d-d9de-4b61-9b9e-6dc63b7e58a4.png");
+        img.style.marginTop = "180px";
+        img.style.maxWidth = "980px";
+      }
+    });
+  }
+
   function onClickCapture(e) {
     const target = e.target;
     const el = target && target.closest ? target.closest('a,button,[role="link"],[role="button"]') : null;
@@ -46,6 +65,10 @@
     window.location.assign(BRIDGE_PATH);
   }
 
-  document.addEventListener("DOMContentLoaded", rewriteAnchors);
+  document.addEventListener("DOMContentLoaded", () => {
+    rewriteAnchors();
+    swapLandingImages();
+  });
+  swapLandingImages();
   document.addEventListener("click", onClickCapture, true);
 })();
