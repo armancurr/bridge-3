@@ -43,12 +43,12 @@
       if (
         className.includes("absolute top-0 left-0 w-full h-full object-cover")
       ) {
-        img.setAttribute("src", "/new-bg-hero.png");
+        img.setAttribute("src", "/new-bg-hero.webp");
         return;
       }
 
       if (className.includes("w-full !h-auto")) {
-        img.setAttribute("src", "/7356fd7d-d9de-4b61-9b9e-6dc63b7e58a4.png");
+        img.setAttribute("src", "/7356fd7d-d9de-4b61-9b9e-6dc63b7e58a4.webp");
         img.style.marginTop = "180px";
         img.style.maxWidth = "980px";
       }

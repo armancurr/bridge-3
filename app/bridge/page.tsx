@@ -527,7 +527,7 @@ function PayAssetSelector() {
       </span>
       <span className="relative z-20 flex h-10 w-[72px] items-center justify-start bg-transparent pl-0">
         <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2c374b]">
-        <AssetIcon src="/tokens/arb.png" alt="Arbitrum" size={32} />
+        <AssetIcon src="/tokens/arb.webp" alt="Arbitrum" size={32} />
         </span>
       </span>
       <span className="relative z-20 -ml-[1px] flex h-10 min-w-fit items-center gap-1 rounded-r-full border border-l-0 border-[#6f86e6] bg-[#627eeb] py-1 pr-3 pl-[7px] text-white before:absolute before:inset-[-3px] before:z-[-1] before:w-[calc(100%+3px)] before:translate-x-[3px] before:rounded-r-full before:border-2 before:border-l-0 before:border-transparent after:absolute after:inset-[-5px] after:z-[-2] after:w-[calc(100%+4px)] after:translate-x-[6px] after:rounded-r-full after:border-4 after:border-l-0 after:border-transparent">
@@ -570,11 +570,11 @@ function TokenPicker({ onBack }: { onBack: () => void }) {
     { name: "Ethereum", badge: <AssetIcon src="/tokens/eth.svg" alt="Ethereum" /> },
     { name: "Bitcoin", badge: <AssetIcon src="/tokens/btc.svg" alt="Bitcoin" /> },
     { name: "Solana", badge: <AssetIcon src="/tokens/sol.svg" alt="Solana" /> },
-    { name: "Arbitrum", badge: <AssetIcon src="/tokens/arb.png" alt="Arbitrum" /> },
-    { name: "Optimism", badge: <AssetIcon src="/tokens/op.png" alt="Optimism" /> },
-    { name: "Base", badge: <AssetIcon src="/tokens/base.png" alt="Base" /> },
+    { name: "Arbitrum", badge: <AssetIcon src="/tokens/arb.webp" alt="Arbitrum" /> },
+    { name: "Optimism", badge: <AssetIcon src="/tokens/op.webp" alt="Optimism" /> },
+    { name: "Base", badge: <AssetIcon src="/tokens/base.webp" alt="Base" /> },
     { name: "BNB Chain", badge: <AssetIcon src="/tokens/bnb.svg" alt="BNB Chain" /> },
-    { name: "Osmosis", badge: <AssetIcon src="/tokens/osmo.png" alt="Osmosis" /> },
+    { name: "Osmosis", badge: <AssetIcon src="/tokens/osmo.webp" alt="Osmosis" /> },
   ];
 
   const tokens = [
@@ -612,25 +612,25 @@ function TokenPicker({ onBack }: { onBack: () => void }) {
       name: "Ethereum",
       symbol: "ETH",
       badge: <AssetIcon src="/tokens/eth.svg" alt="Ethereum" />,
-      chain: <AssetIcon src="/tokens/arb.png" alt="Arbitrum network" size={18} />,
+      chain: <AssetIcon src="/tokens/arb.webp" alt="Arbitrum network" size={18} />,
     },
     {
       name: "Ethereum",
       symbol: "ETH",
       badge: <AssetIcon src="/tokens/eth.svg" alt="Ethereum" />,
-      chain: <AssetIcon src="/tokens/op.png" alt="Optimism network" size={18} />,
+      chain: <AssetIcon src="/tokens/op.webp" alt="Optimism network" size={18} />,
     },
     {
       name: "Fantom",
       symbol: "FTM",
-      badge: <AssetIcon src="/tokens/ftm.png" alt="Fantom" />,
-      chain: <AssetIcon src="/tokens/ftm.png" alt="Fantom network" size={18} />,
+      badge: <AssetIcon src="/tokens/ftm.webp" alt="Fantom" />,
+      chain: <AssetIcon src="/tokens/ftm.webp" alt="Fantom network" size={18} />,
     },
     {
       name: "Ethereum",
       symbol: "ETH",
       badge: <AssetIcon src="/tokens/eth.svg" alt="Ethereum" />,
-      chain: <AssetIcon src="/tokens/base.png" alt="Base network" size={18} />,
+      chain: <AssetIcon src="/tokens/base.webp" alt="Base network" size={18} />,
     },
   ];
 
@@ -911,10 +911,14 @@ export default function Home() {
           : "translate-x-0";
 
   return (
-    <main
-      className="relative min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat text-white"
-      style={{ backgroundImage: "url('/bg.png')" }}
-    >
+    <main className="relative min-h-screen overflow-hidden text-white">
+      <Image
+        src="/bg.webp"
+        alt=""
+        fill
+        priority
+        className="object-cover object-center"
+      />
       <div className="absolute inset-x-0 top-0 z-30 flex items-start justify-between px-3 pt-1 sm:px-4 sm:pt-2">
         <button
           type="button"

@@ -13,7 +13,7 @@ export default function HomePage() {
       <section className="relative h-full w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/new-bg-hero.png"
+            src="/new-bg-hero.webp"
             alt=""
             fill
             priority
@@ -25,7 +25,7 @@ export default function HomePage() {
           <div className="pointer-events-none absolute inset-x-0 top-0 z-0 flex justify-center">
             <div className="relative w-full max-w-[1000px] aspect-[1400/900]">
               <Image
-                src="/7356fd7d-d9de-4b61-9b9e-6dc63b7e58a4.png"
+                src="/7356fd7d-d9de-4b61-9b9e-6dc63b7e58a4.webp"
                 alt="Squid hero artwork"
                 fill
                 priority
