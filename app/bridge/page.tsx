@@ -372,36 +372,15 @@ function LeftSidebar({ onClose }: { onClose: () => void }) {
           </span>
           <span>Home</span>
         </a>
-        <a href="#" className="mt-1 flex items-center gap-3 rounded-2xl px-4 py-2 text-[18px] hover:bg-white/4">
-          <span className="text-[#cfd3dd]">
-            <SupportIcon />
-          </span>
-          <span>Support</span>
-        </a>
-
         <div className="mt-5 px-4 text-[14px] leading-[14px] text-[#676b7e]">Products</div>
         <a
           href="#"
-          className="mt-2 flex items-center gap-3 rounded-2xl bg-[#6f4db8]/90 px-4 py-2.5 text-[18px] text-white shadow-[0_10px_30px_rgba(111,77,184,0.22)]"
+          className="mt-2 flex items-center gap-3 rounded-2xl bg-[#fca354] px-4 py-2.5 text-[18px] text-white"
         >
           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10">
             <SwapIcon />
           </span>
           <span>Swap</span>
-        </a>
-
-        <div className="mt-5 px-4 text-[14px] leading-[14px] text-[#676b7e]">Learn</div>
-        <a href="#" className="mt-2 flex items-center gap-3 rounded-2xl px-4 py-2 text-[18px] hover:bg-white/4">
-          <span className="text-[#cfd3dd]">
-            <LinkIcon />
-          </span>
-          <span>Squid Ecosystem</span>
-        </a>
-        <a href="#" className="mt-1 flex items-center gap-3 rounded-2xl px-4 py-2 text-[18px] hover:bg-white/4">
-          <span className="text-[#cfd3dd]">
-            <BookIcon />
-          </span>
-          <span>Squid School</span>
         </a>
 
         <div className="mt-5 px-4 text-[14px] leading-[14px] text-[#676b7e]">Social</div>
@@ -419,21 +398,11 @@ function LeftSidebar({ onClose }: { onClose: () => void }) {
         </a>
 
         <div className="mt-5 px-4 text-[14px] leading-[14px] text-[#676b7e]">Developers</div>
-        <a href="#" className="mt-2 flex items-center gap-3 rounded-2xl px-4 py-2 text-[18px] hover:bg-white/4">
-          <span className="text-[#cfd3dd]">GH</span>
-          <span>GitHub</span>
-        </a>
         <a href="#" className="mt-1 flex items-center gap-3 rounded-2xl px-4 py-2 text-[18px] hover:bg-white/4">
           <span className="text-[#cfd3dd]">
             <BookIcon />
           </span>
           <span>Developer Docs</span>
-        </a>
-        <a href="#" className="mt-1 flex items-center gap-3 rounded-2xl px-4 py-2 text-[18px] hover:bg-white/4">
-          <span className="text-[#cfd3dd]">
-            <PuzzleIcon />
-          </span>
-          <span>Widget Studio</span>
         </a>
       </nav>
 
@@ -683,7 +652,7 @@ function PayAssetSelector({
           <AssetIcon src={chainIcon} alt={chainLabel} size={32} />
         </span>
       </span>
-      <span className="relative z-20 -ml-[1px] flex h-10 min-w-fit items-center gap-1 rounded-r-full border border-l-0 border-[#6f86e6] bg-[#627eeb] py-1 pr-3 pl-[7px] text-white before:absolute before:inset-[-3px] before:z-[-1] before:w-[calc(100%+3px)] before:translate-x-[3px] before:rounded-r-full before:border-2 before:border-l-0 before:border-transparent after:absolute after:inset-[-5px] after:z-[-2] after:w-[calc(100%+4px)] after:translate-x-[6px] after:rounded-r-full after:border-4 after:border-l-0 after:border-transparent">
+      <span className="relative z-20 -ml-[1px] flex h-10 min-w-fit items-center gap-1 rounded-r-full border border-l-0 border-[#27292c] bg-[#17191c] py-1 pr-3 pl-[7px] text-[#d1d6e0] before:absolute before:inset-[-3px] before:z-[-1] before:w-[calc(100%+3px)] before:translate-x-[3px] before:rounded-r-full before:border-2 before:border-l-0 before:border-transparent after:absolute after:inset-[-5px] after:z-[-2] after:w-[calc(100%+4px)] after:translate-x-[6px] after:rounded-r-full after:border-4 after:border-l-0 after:border-transparent">
         <span className="text-[14px] leading-[13px] font-normal">BWICK</span>
         <SelectorArrowIcon className="h-4 w-4 min-w-4 opacity-66" />
       </span>

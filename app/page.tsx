@@ -22,8 +22,8 @@ export default function HomePage() {
         </div>
 
         <div className="relative z-10 flex h-full flex-col">
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-0 flex justify-center">
-            <div className="relative w-full max-w-[1000px] aspect-[1400/900]">
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-0 flex justify-center px-4 sm:px-6">
+            <div className="relative aspect-[1400/900] w-[92vw] max-w-[720px] sm:w-full sm:max-w-[860px] lg:max-w-[1000px]">
               <Image
                 src="/7356fd7d-d9de-4b61-9b9e-6dc63b7e58a4.webp"
                 alt="Squid hero artwork"
@@ -85,9 +85,9 @@ export default function HomePage() {
               <h1
                 className={`${bagossCondensed.className} text-[64px] leading-[0.85] tracking-[-0.05em] text-[#111111] sm:text-[90px] md:text-[110px] lg:text-[128px]`}
               >
-                <span className="block">2 CHAINS</span>
-                <span className="block">1 TOKEN</span>
-                <span className="block">BWICK BY BWICK</span>
+                <span className="hero-line block [animation-delay:0ms]">100 CHAINS</span>
+                <span className="hero-line block [animation-delay:140ms]">20K TOKENS</span>
+                <span className="hero-line block [animation-delay:280ms]">1 SQUID</span>
               </h1>
 
               <p className="mt-6 text-[16px] font-medium text-[#111111]/80">
