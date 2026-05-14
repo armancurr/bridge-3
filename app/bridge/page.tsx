@@ -1821,7 +1821,7 @@ function BridgeInner() {
   return (
     <main className="relative min-h-screen overflow-hidden text-white">
       <Image
-        src="/bg.webp"
+        src="/bridge-bg.png"
         alt=""
         fill
         priority
