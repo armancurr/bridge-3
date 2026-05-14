@@ -2,8 +2,11 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { BridgeProvider } from "./BridgeProvider";
+import { useBridge, type Phase } from "./useBridge";
+import { isUiTx } from "./ui-tx-tracker";
 
-type CardView = "swap" | "wallet" | "token" | "history" | "settings";
+type CardView = "swap" | "wallet" | "token" | "history" | "settings" | "info";
 
 function SquidMark() {
   return (
@@ -156,6 +159,58 @@ function CoinbaseIcon() {
   return (
     <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1659f5]">
       <span className="flex h-5 w-5 items-center justify-center rounded-[6px] bg-white text-[#1659f5] text-[10px] font-bold">■</span>
+    </span>
+  );
+}
+
+function PhantomLogo() {
+  return (
+    <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-[10px]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/wallets/phantom.svg"
+        alt="Phantom"
+        className="h-10 w-10 object-cover"
+      />
+    </span>
+  );
+}
+
+function SolflareLogo() {
+  return (
+    <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-[10px]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/wallets/solflare.svg"
+        alt="Solflare"
+        className="h-10 w-10 object-cover"
+      />
+    </span>
+  );
+}
+
+function KeplrLogo() {
+  return (
+    <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-[10px]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/wallets/keplr.svg"
+        alt="Keplr"
+        className="h-10 w-10 object-cover"
+      />
+    </span>
+  );
+}
+
+function BwickLogoBadge() {
+  return (
+    <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-[10px] bg-[#f08237]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/tokens/bwick.png"
+        alt="BWICK Wallet"
+        className="h-10 w-10 object-cover"
+      />
     </span>
   );
 }
@@ -517,9 +572,107 @@ function FlipArrowIcon() {
   );
 }
 
-function PayAssetSelector() {
+function shortAddr(a: string, head = 6, tail = 4): string {
+  if (a.length <= head + tail + 1) return a;
+  return `${a.slice(0, head)}…${a.slice(-tail)}`;
+}
+
+function PhaseBanner({ phase }: { phase: Phase }) {
+  if (phase.kind === "idle") return null;
+  const base =
+    "rounded-[10px] border px-3 py-2 text-[13px] leading-[18px]";
+  if (phase.kind === "error") {
+    return (
+      <div className={`${base} border-red-500/40 bg-red-500/10 text-red-200`}>
+        {phase.message}
+      </div>
+    );
+  }
+  if (phase.kind === "done") {
+    const solToBwick = phase.direction === "sol_to_bwick";
+    const primaryLabel = solToBwick ? "Solana" : "bwickchain";
+    const primaryUrl = solToBwick
+      ? `https://solscan.io/tx/${phase.primaryTx}`
+      : `https://explore.bwick.fun/tx/${phase.primaryTx}`;
+    const sisterLabel = solToBwick ? "bwickchain" : "Solana";
+    const sisterUrl = phase.sisterTx
+      ? solToBwick
+        ? `https://explore.bwick.fun/tx/${phase.sisterTx}`
+        : `https://solscan.io/tx/${phase.sisterTx}`
+      : null;
+    return (
+      <div className="rounded-[14px] border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-emerald-100">
+        <div className="flex items-start gap-3">
+          <span className="mt-[2px] flex h-7 w-7 flex-none items-center justify-center rounded-full bg-emerald-500/20 ring-1 ring-emerald-400/50">
+            <svg viewBox="0 0 24 24" className="h-4 w-4 text-emerald-300" aria-hidden="true">
+              <path d="M5 12.5 10 17.5 19.5 8" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            </svg>
+          </span>
+          <div className="flex flex-1 flex-col gap-1.5">
+            <div className="text-[14px] font-medium leading-[18px]">
+              {phase.arrived ? "Bridge complete" : "Burn confirmed"}
+              <span className="ml-1.5 text-emerald-300/80">
+                {phase.amount} BWICK
+              </span>
+            </div>
+            {!phase.arrived ? (
+              <div className="text-[12px] leading-[16px] text-emerald-300/80">
+                Funds arriving on {sisterLabel} shortly.
+              </div>
+            ) : null}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] leading-[14px]">
+              <a
+                href={primaryUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="font-mono text-emerald-300 underline-offset-2 hover:underline"
+              >
+                {primaryLabel}: {shortAddr(phase.primaryTx, 6, 6)}
+              </a>
+              {sisterUrl ? (
+                <a
+                  href={sisterUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-mono text-emerald-300 underline-offset-2 hover:underline"
+                >
+                  {sisterLabel}: {shortAddr(phase.sisterTx!, 6, 6)}
+                </a>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  const messages: Record<string, string> = {
+    submitting: "Signing & broadcasting…",
+    "solana-confirming": "Confirming on Solana…",
+    "polling-bwick": "Waiting for relayer to mint on bwickchain…",
+    "polling-solana": "Waiting for relayer to release SPL on Solana…",
+  };
   return (
-    <button className="group relative flex h-10 items-center text-[#d1d6e0] focus:outline-none">
+    <div className={`${base} border-[#9e79d2]/40 bg-[#9e79d2]/10 text-[#d1d6e0]`}>
+      {messages[phase.kind] || "…"}
+    </div>
+  );
+}
+
+function PayAssetSelector({
+  direction,
+  onClick,
+}: {
+  direction: "sol_to_bwick" | "bwick_to_sol";
+  onClick?: () => void;
+}) {
+  const chainIcon =
+    direction === "sol_to_bwick" ? "/tokens/sol.svg" : "/tokens/bwick.png";
+  const chainLabel = direction === "sol_to_bwick" ? "Solana" : "bwickchain";
+  return (
+    <button
+      onClick={onClick}
+      className="group relative flex h-10 items-center text-[#d1d6e0] focus:outline-none"
+    >
       <span className="absolute left-0 top-0 z-10 h-10 w-[72px] text-[#fbfbfd1a]">
         <svg viewBox="0 0 72 40" className="h-10 w-[72px] fill-current" aria-hidden="true">
           <path d="m57.86 5.86c-.53.53-1.05 1.06-1.56 1.59-3.29 3.38-6.37 6.55-10.3 6.55s-7.01-3.17-10.3-6.55c-.51-.53-1.03-1.06-1.56-1.59-3.9-3.91-9.02-5.86-14.14-5.86s-10.24 1.95-14.14 5.86c-3.91 3.9-5.86 9.02-5.86 14.14s1.95 10.24 5.86 14.14c3.91 3.91 9.02 5.86 14.14 5.86s10.24-1.95 14.14-5.86c.52-.53 1.04-1.06 1.55-1.58 3.29-3.39 6.37-6.56 10.31-6.56s7.02 3.17 10.31 6.56c.51.53 1.03 1.06 1.55 1.58 3.91 3.91 9.02 5.86 14.14 5.86v-40c-5.12 0-10.24 1.95-14.14 5.86zm14.14 33.14c-5.07 0-9.85-1.98-13.43-5.56-.52-.52-1.02-1.04-1.54-1.57-3.43-3.53-6.67-6.86-11.02-6.86s-7.6 3.33-11.04 6.88c-.5.52-1.01 1.04-1.53 1.56-3.59 3.59-8.36 5.57-13.44 5.57s-9.85-1.98-13.43-5.57c-3.59-3.59-5.56-8.36-5.56-13.43s1.98-9.85 5.56-13.44c3.58-3.6 8.35-5.58 13.43-5.58s9.85 1.98 13.44 5.57c.52.52 1.04 1.05 1.55 1.58 3.43 3.53 6.66 6.86 11.02 6.86s7.59-3.33 11.02-6.86c.51-.52 1.02-1.05 1.55-1.58 3.59-3.59 8.36-5.56 13.43-5.56v38z" />
@@ -527,22 +680,29 @@ function PayAssetSelector() {
       </span>
       <span className="relative z-20 flex h-10 w-[72px] items-center justify-start bg-transparent pl-0">
         <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2c374b]">
-        <AssetIcon src="/tokens/arb.webp" alt="Arbitrum" size={32} />
+          <AssetIcon src={chainIcon} alt={chainLabel} size={32} />
         </span>
       </span>
       <span className="relative z-20 -ml-[1px] flex h-10 min-w-fit items-center gap-1 rounded-r-full border border-l-0 border-[#6f86e6] bg-[#627eeb] py-1 pr-3 pl-[7px] text-white before:absolute before:inset-[-3px] before:z-[-1] before:w-[calc(100%+3px)] before:translate-x-[3px] before:rounded-r-full before:border-2 before:border-l-0 before:border-transparent after:absolute after:inset-[-5px] after:z-[-2] after:w-[calc(100%+4px)] after:translate-x-[6px] after:rounded-r-full after:border-4 after:border-l-0 after:border-transparent">
-        <span className="relative mr-2 flex h-8 w-8 items-center justify-center overflow-hidden rounded-full">
-          <span className="absolute inset-y-0 right-0 w-[18px] bg-[#627eeb]" />
-          <AssetIcon src="/tokens/eth.svg" alt="ETH" size={32} className="relative z-10" />
-        </span>
-        <span className="text-[14px] leading-[13px] font-normal">ETH</span>
+        <span className="text-[14px] leading-[13px] font-normal">BWICK</span>
         <SelectorArrowIcon className="h-4 w-4 min-w-4 opacity-66" />
       </span>
     </button>
   );
 }
 
-function ReceiveAssetSelector({ onClick }: { onClick: () => void }) {
+function ReceiveAssetSelector({
+  onClick,
+  direction,
+}: {
+  onClick: () => void;
+  direction: "sol_to_bwick" | "bwick_to_sol";
+}) {
+  // Receive side is whichever chain isn't paying — token is always BWICK.
+  const chainIcon =
+    direction === "sol_to_bwick" ? "/tokens/bwick.png" : "/tokens/sol.svg";
+  const chainLabel =
+    direction === "sol_to_bwick" ? "bwickchain" : "Solana";
   return (
     <button onClick={onClick} className="group relative flex h-10 w-fit items-center text-[#d1d6e0] focus:outline-none">
       <span className="absolute left-0 top-0 z-10 h-10 w-[72px] text-[#fbfbfd1a]">
@@ -551,88 +711,141 @@ function ReceiveAssetSelector({ onClick }: { onClick: () => void }) {
         </svg>
       </span>
       <span className="relative z-20 flex h-10 w-[72px] items-center justify-start bg-transparent pl-0">
-        <span className="flex h-10 w-10 items-center justify-center text-[#fbfbfd]">
-          <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-            <path d="M12 17V12M12 12V7M12 12H17M12 12H7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-          </svg>
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2c374b]">
+          <AssetIcon src={chainIcon} alt={chainLabel} size={32} />
         </span>
       </span>
       <span className="relative z-20 -ml-[1px] flex h-10 min-w-fit items-center gap-1 rounded-r-full border border-l-0 border-[#27292c] bg-[#17191c] py-1 pr-3 pl-[7px] text-[#d1d6e0] before:absolute before:inset-[-3px] before:z-[-1] before:w-[calc(100%+3px)] before:translate-x-[3px] before:rounded-r-full before:border-2 before:border-l-0 before:border-transparent after:absolute after:inset-[-5px] after:z-[-2] after:w-[calc(100%+4px)] after:translate-x-[6px] after:rounded-r-full after:border-4 after:border-l-0 after:border-transparent">
-        <span className="text-[14px] leading-[13px] font-normal">Select token</span>
+        <span className="text-[14px] leading-[13px] font-normal">BWICK</span>
         <SelectorArrowIcon className="h-4 w-4 min-w-4 opacity-66" />
       </span>
     </button>
   );
 }
 
-function TokenPicker({ onBack }: { onBack: () => void }) {
-  const chains = [
-    { name: "Ethereum", badge: <AssetIcon src="/tokens/eth.svg" alt="Ethereum" /> },
-    { name: "Bitcoin", badge: <AssetIcon src="/tokens/btc.svg" alt="Bitcoin" /> },
+type TokenPickerMode = "pay" | "receive";
+type ChainName = "Solana" | "bwickchain";
+
+function TokenPicker({
+  onBack,
+  mode,
+  onCommit,
+  otherChain,
+}: {
+  onBack: () => void;
+  mode: TokenPickerMode;
+  /** Called when the user confirms a chain+token pick. */
+  onCommit: (chain: ChainName) => void;
+  /** The chain already selected on the other side. Selecting the same
+   *  here surfaces an inline error instead of committing. */
+  otherChain: ChainName | null;
+}) {
+  const [selectedChain, setSelectedChain] = useState<ChainName | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const chains: { name: ChainName; badge: React.ReactNode }[] = [
     { name: "Solana", badge: <AssetIcon src="/tokens/sol.svg" alt="Solana" /> },
-    { name: "Arbitrum", badge: <AssetIcon src="/tokens/arb.webp" alt="Arbitrum" /> },
-    { name: "Optimism", badge: <AssetIcon src="/tokens/op.webp" alt="Optimism" /> },
-    { name: "Base", badge: <AssetIcon src="/tokens/base.webp" alt="Base" /> },
-    { name: "BNB Chain", badge: <AssetIcon src="/tokens/bnb.svg" alt="BNB Chain" /> },
-    { name: "Osmosis", badge: <AssetIcon src="/tokens/osmo.webp" alt="Osmosis" /> },
+    {
+      name: "bwickchain",
+      badge: <AssetIcon src="/tokens/bwick.png" alt="bwickchain" />,
+    },
   ];
 
-  const tokens = [
-    {
-      name: "Ethereum",
-      symbol: "ETH",
-      badge: <AssetIcon src="/tokens/eth.svg" alt="Ethereum" />,
-      chain: <AssetIcon src="/tokens/eth.svg" alt="Ethereum network" size={18} />,
-    },
-    {
-      name: "Binance",
-      symbol: "BNB",
-      badge: <AssetIcon src="/tokens/bnb.svg" alt="Binance" />,
-      chain: <AssetIcon src="/tokens/bnb.svg" alt="BNB Chain" size={18} />,
-    },
-    {
-      name: "Avalanche",
-      symbol: "AVAX",
-      badge: <AssetIcon src="/tokens/avax.svg" alt="Avalanche" />,
-      chain: <AssetIcon src="/tokens/avax.svg" alt="Avalanche network" size={18} />,
-    },
-    {
-      name: "Polygon",
-      symbol: "POL",
-      badge: <AssetIcon src="/tokens/matic.svg" alt="Polygon" />,
-      chain: <AssetIcon src="/tokens/matic.svg" alt="Polygon network" size={18} />,
-    },
-    {
-      name: "Filecoin",
-      symbol: "FIL",
-      badge: <AssetIcon src="/tokens/fil.svg" alt="Filecoin" />,
-      chain: <AssetIcon src="/tokens/fil.svg" alt="Filecoin network" size={18} />,
-    },
-    {
-      name: "Ethereum",
-      symbol: "ETH",
-      badge: <AssetIcon src="/tokens/eth.svg" alt="Ethereum" />,
-      chain: <AssetIcon src="/tokens/arb.webp" alt="Arbitrum network" size={18} />,
-    },
-    {
-      name: "Ethereum",
-      symbol: "ETH",
-      badge: <AssetIcon src="/tokens/eth.svg" alt="Ethereum" />,
-      chain: <AssetIcon src="/tokens/op.webp" alt="Optimism network" size={18} />,
-    },
-    {
-      name: "Fantom",
-      symbol: "FTM",
-      badge: <AssetIcon src="/tokens/ftm.webp" alt="Fantom" />,
-      chain: <AssetIcon src="/tokens/ftm.webp" alt="Fantom network" size={18} />,
-    },
-    {
-      name: "Ethereum",
-      symbol: "ETH",
-      badge: <AssetIcon src="/tokens/eth.svg" alt="Ethereum" />,
-      chain: <AssetIcon src="/tokens/base.webp" alt="Base network" size={18} />,
-    },
-  ];
+  // Token list is filtered by the chain pick (when one is staged), or
+  // shows both BWICK rows when none is selected yet.
+  const tokens =
+    selectedChain === "Solana"
+      ? [
+          {
+            name: "BWICK",
+            symbol: "SPL",
+            chain: "Solana" as ChainName,
+            badge: <AssetIcon src="/tokens/sol.svg" alt="BWICK on Solana" />,
+            chainIcon: (
+              <AssetIcon
+                src="/tokens/sol.svg"
+                alt="Solana network"
+                size={18}
+              />
+            ),
+          },
+        ]
+      : selectedChain === "bwickchain"
+        ? [
+            {
+              name: "BWICK",
+              symbol: "ubwick",
+              chain: "bwickchain" as ChainName,
+              badge: (
+                <AssetIcon
+                  src="/tokens/bwick.png"
+                  alt="BWICK on bwickchain"
+                />
+              ),
+              chainIcon: (
+                <AssetIcon
+                  src="/tokens/bwick.png"
+                  alt="bwickchain network"
+                  size={18}
+                />
+              ),
+            },
+          ]
+        : [
+            {
+              name: "BWICK",
+              symbol: "SPL",
+              chain: "Solana" as ChainName,
+              badge: <AssetIcon src="/tokens/sol.svg" alt="BWICK on Solana" />,
+              chainIcon: (
+                <AssetIcon
+                  src="/tokens/sol.svg"
+                  alt="Solana network"
+                  size={18}
+                />
+              ),
+            },
+            {
+              name: "BWICK",
+              symbol: "ubwick",
+              chain: "bwickchain" as ChainName,
+              badge: (
+                <AssetIcon
+                  src="/tokens/bwick.png"
+                  alt="BWICK on bwickchain"
+                />
+              ),
+              chainIcon: (
+                <AssetIcon
+                  src="/tokens/bwick.png"
+                  alt="bwickchain network"
+                  size={18}
+                />
+              ),
+            },
+          ];
+
+  function pickChain(name: ChainName) {
+    if (otherChain && otherChain === name) {
+      setError(
+        `${name} is already selected on the other side — pick a different chain.`,
+      );
+      setSelectedChain(null);
+      return;
+    }
+    setError(null);
+    setSelectedChain(name);
+  }
+
+  function confirmToken(chain: ChainName) {
+    if (otherChain && otherChain === chain) {
+      setError(
+        `${chain} is already selected on the other side — pick a different chain.`,
+      );
+      return;
+    }
+    onCommit(chain);
+  }
 
   return (
     <div className="h-[658px] bg-[#191b1f]">
@@ -640,7 +853,9 @@ function TokenPicker({ onBack }: { onBack: () => void }) {
         <button onClick={onBack} className="flex h-10 w-[60px] items-center justify-center rounded-full bg-[#2b2e35] ring-1 ring-white/10">
           <BackIcon />
         </button>
-        <div className="pr-10 text-[18px] font-medium">Select token to receive</div>
+        <div className="pr-10 text-[18px] font-medium">
+          {mode === "pay" ? "Pay from" : "Receive on"}
+        </div>
         <div className="w-[60px]" />
       </div>
 
@@ -662,27 +877,37 @@ function TokenPicker({ onBack }: { onBack: () => void }) {
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#8f67d4] text-white">
                 <ChainLinkIcon />
               </span>
-              <span>All Chains</span>
+              <span>BWICK bridge</span>
             </button>
 
             <div className="mt-4 flex items-center gap-2 text-[14px] text-[#b082ea]">
               <SparkleIcon />
-              <span>Popular chains</span>
+              <span>Supported chains</span>
             </div>
 
             <div className="mt-3 space-y-3">
-              {chains.map((chain) => (
-                <button key={chain.name} className="flex items-center gap-3 text-left text-[17px] text-[#d8dbe6]">
-                  {chain.badge}
-                  <span>{chain.name}</span>
-                </button>
-              ))}
+              {chains.map((chain) => {
+                const isDisabled = otherChain === chain.name;
+                const isSelected = selectedChain === chain.name;
+                return (
+                  <button
+                    key={chain.name}
+                    onClick={() => pickChain(chain.name)}
+                    disabled={isDisabled}
+                    className={`flex w-full items-center gap-3 rounded-[12px] px-2 py-1 text-left text-[17px] transition ${
+                      isDisabled
+                        ? "cursor-not-allowed text-[#5a5e6c] opacity-40"
+                        : isSelected
+                          ? "bg-[#9e79d22a] text-white ring-1 ring-[#9e79d2]"
+                          : "text-[#d8dbe6] hover:bg-white/4"
+                    }`}
+                  >
+                    {chain.badge}
+                    <span>{chain.name}</span>
+                  </button>
+                );
+              })}
             </div>
-
-            <button className="mt-5 flex items-center gap-2 text-[14px] text-[#a877ea]">
-              <ChainLinkIcon />
-              <span>Chains A-Z</span>
-            </button>
           </div>
 
           <div>
@@ -692,19 +917,43 @@ function TokenPicker({ onBack }: { onBack: () => void }) {
             </div>
 
             <div className="mt-3 space-y-3">
-              {tokens.map((token, index) => (
-                <button key={`${token.name}-${token.symbol}-${index}`} className="flex w-full items-center gap-3 text-left text-[#d8dbe6]">
-                  <div className="relative">
-                    {token.badge}
-                    <span className="absolute -bottom-1 -right-1 block scale-[0.7]">{token.chain}</span>
-                  </div>
-                  <span className="leading-tight">
-                    <span className="block text-[17px] font-medium">{token.name}</span>
-                    <span className="block text-[14px] text-[#8d92a8]">{token.symbol}</span>
-                  </span>
-                </button>
-              ))}
+              {tokens.map((token, index) => {
+                const isDisabled = otherChain === token.chain;
+                return (
+                  <button
+                    key={`${token.symbol}-${index}`}
+                    onClick={() => confirmToken(token.chain)}
+                    disabled={isDisabled}
+                    className={`flex w-full items-center gap-3 rounded-[12px] px-2 py-1 text-left transition ${
+                      isDisabled
+                        ? "cursor-not-allowed opacity-40"
+                        : "text-[#d8dbe6] hover:bg-white/4"
+                    }`}
+                  >
+                    <div className="relative">
+                      {token.badge}
+                      <span className="absolute -bottom-1 -right-1 block scale-[0.7]">
+                        {token.chainIcon}
+                      </span>
+                    </div>
+                    <span className="leading-tight">
+                      <span className="block text-[17px] font-medium">
+                        {token.name}
+                      </span>
+                      <span className="block text-[14px] text-[#8d92a8]">
+                        {token.symbol}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
             </div>
+
+            {error ? (
+              <div className="mt-4 rounded-[10px] border border-red-500/40 bg-red-500/10 px-3 py-2 text-[13px] text-red-200">
+                {error}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
@@ -712,7 +961,71 @@ function TokenPicker({ onBack }: { onBack: () => void }) {
   );
 }
 
-function HistoryView({ onBack }: { onBack: () => void }) {
+interface RelayerTx {
+  id: string;
+  type?: string;
+  direction?: string;
+  status: string;
+  amount: string;
+  solanaTxHash?: string | null;
+  bwickTxHash?: string | null;
+}
+
+function ubwickToBwick(raw: string): string {
+  const n = Number(raw);
+  if (!Number.isFinite(n)) return raw;
+  return (n / 1_000_000).toLocaleString(undefined, {
+    maximumFractionDigits: 6,
+  });
+}
+
+function HistoryView({
+  onBack,
+  bridge,
+}: {
+  onBack: () => void;
+  bridge: ReturnType<typeof useBridge>;
+}) {
+  const [items, setItems] = useState<RelayerTx[]>([]);
+  const [err, setErr] = useState<string | null>(null);
+
+  // The relayer history endpoint accepts either a bwick1… or a Solana
+  // pubkey; whichever wallet is connected, look it up.
+  const probe = bridge.bwickAddress || bridge.solAddress;
+
+  useEffect(() => {
+    if (!probe) {
+      setItems([]);
+      return;
+    }
+    let cancelled = false;
+    const RELAYER_API =
+      process.env.NEXT_PUBLIC_RELAYER_API_URL ||
+      "http://167.99.147.85:3000";
+    const load = async () => {
+      try {
+        const res = await fetch(
+          `${RELAYER_API}/api/bridge/history/${probe}`,
+          { cache: "no-store" },
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = (await res.json()) as { transactions?: RelayerTx[] };
+        if (!cancelled) {
+          setItems(json.transactions ?? []);
+          setErr(null);
+        }
+      } catch (e) {
+        if (!cancelled) setErr(e instanceof Error ? e.message : String(e));
+      }
+    };
+    void load();
+    const t = setInterval(load, 5000);
+    return () => {
+      cancelled = true;
+      clearInterval(t);
+    };
+  }, [probe]);
+
   return (
     <div className="min-h-[658px] bg-[#17191c]">
       <div className="px-5 pt-3">
@@ -730,8 +1043,158 @@ function HistoryView({ onBack }: { onBack: () => void }) {
 
       <div className="mt-4 border-t border-[#fbfbfd1a]" />
 
-      <div className="flex min-h-[500px] items-center justify-center px-6 text-center">
-        <p className="text-[17px] leading-[18px] text-[#676b7e]">Your transaction history will appear here</p>
+      {!probe ? (
+        <div className="flex min-h-[500px] items-center justify-center px-6 text-center">
+          <p className="text-[17px] leading-[18px] text-[#676b7e]">
+            Connect a wallet to see your bridge history.
+          </p>
+        </div>
+      ) : items.length === 0 ? (
+        <div className="flex min-h-[500px] items-center justify-center px-6 text-center">
+          <p className="text-[17px] leading-[18px] text-[#676b7e]">
+            {err ? `Couldn't reach relayer: ${err}` : "No bridges yet."}
+          </p>
+        </div>
+      ) : (
+        <div className="flex flex-col">
+          {items.slice(0, 20).map((tx) => {
+            const isIn =
+              tx.type === "deposit" || tx.direction === "solana_to_bwick";
+            return (
+              <div
+                key={tx.id}
+                className="flex items-center justify-between border-b border-[#fbfbfd0d] px-5 py-3"
+              >
+                <div className="flex flex-col">
+                  <span className="flex items-center gap-2 text-[15px] text-[#d1d6e0]">
+                    {isIn ? "Bridged in" : "Bridged out"}
+                    {isUiTx(tx.solanaTxHash, tx.bwickTxHash) ? (
+                      <span className="rounded-full border border-[#9e79d2]/40 bg-[#9e79d2]/12 px-2 py-[1px] text-[10px] font-medium uppercase tracking-[0.06em] text-[#c4adf2]">
+                        via UI
+                      </span>
+                    ) : (
+                      <span className="rounded-full border border-[#fbfbfd1a] bg-[#fbfbfd08] px-2 py-[1px] text-[10px] font-medium uppercase tracking-[0.06em] text-[#8a8e9b]">
+                        via wallet
+                      </span>
+                    )}
+                  </span>
+                  <span className="text-[12px] text-[#676b7e]">
+                    {tx.status}
+                    {tx.solanaTxHash ? (
+                      <>
+                        {" · "}
+                        <a
+                          href={`https://solscan.io/tx/${tx.solanaTxHash}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[#9e79d2]"
+                        >
+                          sol {shortAddr(tx.solanaTxHash, 6, 4)}
+                        </a>
+                      </>
+                    ) : null}
+                    {tx.bwickTxHash ? (
+                      <>
+                        {" · "}
+                        <a
+                          href={`https://explore.bwick.fun/tx/${tx.bwickTxHash}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[#9e79d2]"
+                        >
+                          bwick {shortAddr(tx.bwickTxHash, 6, 4)}
+                        </a>
+                      </>
+                    ) : null}
+                  </span>
+                </div>
+                <span className="text-[15px] font-medium text-[#d1d6e0]">
+                  {isIn ? "+" : "−"}
+                  {ubwickToBwick(tx.amount)} BWICK
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function InfoView({ onBack }: { onBack: () => void }) {
+  return (
+    <div className="min-h-[658px] bg-[#17191c]">
+      <div className="px-5 pt-3">
+        <button
+          onClick={onBack}
+          aria-label="Back"
+          className="flex h-10 w-[60px] items-center justify-center rounded-[20px] border border-[#fbfbfd1a] bg-[#292c32] text-[#d1d6e0]"
+        >
+          <BackIcon />
+        </button>
+      </div>
+
+      <div className="px-6 pt-6">
+        <h1 className="text-[32px] leading-[34px] font-normal text-[#d1d6e0]">
+          How it works
+        </h1>
+      </div>
+
+      <div className="px-6 pt-5 pb-8 text-[15px] leading-[22px] text-[#b9bccb]">
+        <p>
+          Hold BWICK on one chain, get the same amount on the other. You sign
+          on the chain you&apos;re paying from. Validators see the transfer
+          and mint or release the matching amount on the other side. One to
+          one. You only pay gas.
+        </p>
+
+        <div className="mt-6 flex items-center gap-3 text-[#d1d6e0]">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#9e79d2]/20 ring-1 ring-[#9e79d2]/40">
+            <img
+              src="/tokens/bwick.png"
+              alt=""
+              width={20}
+              height={20}
+              className="h-5 w-5 rounded-full"
+            />
+          </span>
+          <span className="text-[17px] leading-[20px] font-medium">
+            BWICK Wallet
+          </span>
+        </div>
+
+        <p className="mt-3">
+          One browser extension that covers both chains with a single
+          approval. Phantom or Keplr also work, but each only signs for one
+          side, so you connect twice.
+        </p>
+
+        <div className="mt-6 flex flex-wrap gap-2 text-[13px]">
+          <a
+            href="https://bwick.fun/wallet"
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-full border border-[#9e79d2]/50 bg-[#9e79d2]/12 px-3 py-1.5 text-[#cdb6ec] transition hover:border-[#9e79d2]"
+          >
+            Install BWICK Wallet
+          </a>
+          <a
+            href="https://phantom.app/"
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-full border border-[#fbfbfd1f] bg-[#292c32] px-3 py-1.5 text-[#d1d6e0] transition hover:border-[#fbfbfd33]"
+          >
+            Phantom
+          </a>
+          <a
+            href="https://www.keplr.app/get"
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-full border border-[#fbfbfd1f] bg-[#292c32] px-3 py-1.5 text-[#d1d6e0] transition hover:border-[#fbfbfd33]"
+          >
+            Keplr
+          </a>
+        </div>
       </div>
     </div>
   );
@@ -791,64 +1254,325 @@ function SettingsView({ onClose }: { onClose: () => void }) {
   );
 }
 
-function SignInSidebar({ onClose }: { onClose: () => void }) {
-  const walletOptions = [
-    { name: "Ledger", icon: <LedgerIcon />, meta: "Installed" },
-    { name: "WalletConnect", icon: <WalletConnectIcon /> },
-    { name: "MetaMask", icon: <MetaMaskIcon /> },
-    { name: "Browse all wallets", icon: <BrowseWalletsIcon /> },
-  ];
+function SignInSidebar({
+  onClose,
+  bridge,
+}: {
+  onClose: () => void;
+  bridge: ReturnType<typeof useBridge>;
+}) {
+  // Detect whether the BWICK Wallet extension is present. It exposes
+  // both the Solana standard wallet AND window.bwickWallet.cosmos, so a
+  // user with the extension can sign once and get both sides connected
+  // in a single flow. Phantom + Keplr (separate installs) need two
+  // signatures, one per chain.
+  const [hasBwickExt, setHasBwickExt] = useState(false);
+  useEffect(() => {
+    function detect() {
+      const cosmosSide =
+        typeof window !== "undefined" &&
+        Boolean(
+          (window as unknown as { bwickWallet?: { cosmos?: unknown } })
+            .bwickWallet?.cosmos,
+        );
+      // We can't reliably introspect the Solana Standard Wallet list from
+      // outside the adapter, but if the BWICK extension's cosmos surface
+      // is up the Solana side is too — they ship together.
+      setHasBwickExt(cosmosSide);
+    }
+    detect();
+    const t = window.setTimeout(detect, 500);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  const solConnected = bridge.solConnected && bridge.solAddress;
+  const bwickConnected = Boolean(bridge.bwickAddress);
+  const bothConnected = Boolean(solConnected && bwickConnected);
+
+  const [busy, setBusy] = useState<
+    null | "both" | "phantom" | "bwick" | "keplr"
+  >(null);
+
+  async function connectBoth() {
+    setBusy("both");
+    try {
+      // Solana first — wallet-adapter's standard discovery picks up the
+      // BWICK Wallet's Solana provider automatically.
+      if (!solConnected) {
+        await bridge.connectSolana("BWICK Wallet");
+      }
+      if (!bwickConnected) {
+        await bridge.connectBwick("bwick");
+      }
+    } finally {
+      setBusy(null);
+    }
+  }
 
   return (
     <aside className="fixed inset-y-2 right-2 z-50 flex w-[calc(100vw-16px)] max-w-[401px] flex-col overflow-hidden rounded-[24px] bg-[#17191c] shadow-[-12px_0_40px_rgba(0,0,0,0.28)]">
       <div className="flex items-center justify-end gap-5 px-4 pt-3 text-[#d1d6e0]">
-        <button className="text-[#d1d6e0]">
-          <SettingsIcon />
-        </button>
         <button onClick={onClose} className="rounded-full bg-[#e9ebf0] p-1 text-[#17191c]">
           <CloseIcon />
         </button>
       </div>
 
       <div className="px-5 pt-7">
-        <h2 className="text-[36px] leading-[36px] font-normal text-[#d1d6e0]">Sign In</h2>
+        <h2 className="text-[36px] leading-[36px] font-normal text-[#d1d6e0]">
+          {bothConnected ? "Connected" : "Sign In"}
+        </h2>
+        {bothConnected ? (
+          <p className="mt-2 text-[14px] text-[#676b7e]">
+            Both chains are ready. Close to go back to the bridge.
+          </p>
+        ) : (
+          <p className="mt-2 text-[14px] text-[#676b7e]">
+            BWICK bridges between Solana and bwickchain. You need a
+            wallet on each side. The BWICK Wallet extension does both in
+            one signature.
+          </p>
+        )}
       </div>
 
       <div className="mt-4 border-t border-[#fbfbfd1a]" />
 
-      <div className="px-5 py-5">
-        <button className="flex items-center gap-2 text-[#9e79d2]">
-          <span className="flex h-4 w-4 items-center justify-center rounded-[4px] bg-[#9e79d2] text-[#17191c]">
-            <WalletIcon />
-          </span>
-          <span className="text-[16px] leading-[16px]">Connect Wallet</span>
-        </button>
-
-        <div className="mt-6 space-y-4">
-          {walletOptions.map((option) => (
-            <button key={option.name} className="flex w-full items-center justify-between text-left text-[#d1d6e0]">
-              <span className="flex items-center gap-4">
-                {option.icon}
-                <span className="text-[17px] leading-[18px]">{option.name}</span>
-              </span>
-              <span className="flex items-center gap-2 text-[#9e79d2]">
-                {option.meta ? <span className="text-[15px] leading-[15px]">{option.meta}</span> : null}
-                <SelectorArrowIcon className="h-4 w-4 text-[#676b7e]" />
-              </span>
-            </button>
-          ))}
+      <div className="px-5 py-5 space-y-5">
+        {/* Connection status — always visible. */}
+        <div className="space-y-2 text-[14px]">
+          <div className="flex items-center justify-between">
+            <span className="text-[#676b7e]">Solana</span>
+            <span
+              className={
+                solConnected
+                  ? "font-mono text-[#9e79d2]"
+                  : "text-[#676b7e] italic"
+              }
+            >
+              {solConnected ? shortAddr(bridge.solAddress!) : "not connected"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-[#676b7e]">bwickchain</span>
+            <span
+              className={
+                bwickConnected
+                  ? "font-mono text-[#9e79d2]"
+                  : "text-[#676b7e] italic"
+              }
+            >
+              {bwickConnected ? shortAddr(bridge.bwickAddress!) : "not connected"}
+            </span>
+          </div>
         </div>
+
+        {!bothConnected ? (
+          <>
+            {/* One-click both-chain connect when BWICK extension is detected. */}
+            {hasBwickExt ? (
+              <button
+                onClick={connectBoth}
+                disabled={busy !== null}
+                className="flex w-full items-center justify-between rounded-2xl bg-[#9e79d2] px-4 py-3 text-left text-[#17191c] transition hover:brightness-95 disabled:opacity-60"
+              >
+                <span className="flex items-center gap-3">
+                  <BwickLogoBadge />
+
+                  <span className="flex flex-col">
+                    <span className="text-[16px] font-medium">
+                      BWICK Wallet · connect both chains
+                    </span>
+                    <span className="text-[12px] opacity-75">
+                      one signature, Solana + bwickchain
+                    </span>
+                  </span>
+                </span>
+                <span className="text-[20px]">{busy === "both" ? "…" : "›"}</span>
+              </button>
+            ) : null}
+
+            {/* Per-chain fallbacks. */}
+            <div className="space-y-2">
+              <div className="text-[12px] uppercase tracking-[0.06em] text-[#676b7e]">
+                or connect each side separately
+              </div>
+              <button
+                onClick={async () => {
+                  setBusy("phantom");
+                  try {
+                    await bridge.connectSolana("Phantom");
+                  } finally {
+                    setBusy(null);
+                  }
+                }}
+                disabled={busy !== null || !!solConnected}
+                className="flex w-full items-center justify-between text-left text-[#d1d6e0] disabled:opacity-60"
+              >
+                <span className="flex items-center gap-4">
+                  <PhantomLogo />
+                  <span className="flex flex-col">
+                    <span className="text-[17px] leading-[18px]">Phantom</span>
+                    <span className="text-[12px] text-[#676b7e]">Solana</span>
+                  </span>
+                </span>
+                <span className="text-[#9e79d2]">
+                  {solConnected ? "✓" : busy === "phantom" ? "…" : "›"}
+                </span>
+              </button>
+              <button
+                onClick={async () => {
+                  setBusy("bwick");
+                  try {
+                    await bridge.connectBwick("bwick");
+                  } finally {
+                    setBusy(null);
+                  }
+                }}
+                disabled={busy !== null || bwickConnected}
+                className="flex w-full items-center justify-between text-left text-[#d1d6e0] disabled:opacity-60"
+              >
+                <span className="flex items-center gap-4">
+                  <BwickLogoBadge />
+                  <span className="flex flex-col">
+                    <span className="text-[17px] leading-[18px]">
+                      BWICK Wallet
+                    </span>
+                    <span className="text-[12px] text-[#676b7e]">
+                      bwickchain side
+                    </span>
+                  </span>
+                </span>
+                <span className="text-[#9e79d2]">
+                  {bwickConnected ? "✓" : busy === "bwick" ? "…" : "›"}
+                </span>
+              </button>
+              <button
+                onClick={async () => {
+                  setBusy("keplr");
+                  try {
+                    await bridge.connectBwick("keplr");
+                  } finally {
+                    setBusy(null);
+                  }
+                }}
+                disabled={busy !== null || bwickConnected}
+                className="flex w-full items-center justify-between text-left text-[#d1d6e0] disabled:opacity-60"
+              >
+                <span className="flex items-center gap-4">
+                  <KeplrLogo />
+                  <span className="flex flex-col">
+                    <span className="text-[17px] leading-[18px]">Keplr</span>
+                    <span className="text-[12px] text-[#676b7e]">
+                      Cosmos fallback for bwickchain
+                    </span>
+                  </span>
+                </span>
+                <span className="text-[#9e79d2]">
+                  {bwickConnected ? "✓" : busy === "keplr" ? "…" : "›"}
+                </span>
+              </button>
+            </div>
+          </>
+        ) : (
+          <button
+            onClick={() => {
+              bridge.disconnectAll();
+            }}
+            className="w-full rounded-full border border-[#fbfbfd1a] py-3 text-[15px] text-[#676b7e] transition hover:text-[#d1d6e0]"
+          >
+            Disconnect all
+          </button>
+        )}
       </div>
     </aside>
   );
 }
 
-function WalletModal({ onClose }: { onClose: () => void }) {
-  const wallets = [
-    { name: "WalletConnect", icon: <WalletConnectIcon /> },
-    { name: "MetaMask", icon: <MetaMaskIcon /> },
-    { name: "Coinbase Wallet", icon: <CoinbaseIcon /> },
-    { name: "Browser Extension", icon: <BrowserExtensionIcon /> },
+function WalletModal({
+  onClose,
+  bridge,
+}: {
+  onClose: () => void;
+  bridge: ReturnType<typeof useBridge>;
+}) {
+  const solStandard = bridge.solConnected && bridge.solAddress;
+  const bwickConnected = Boolean(bridge.bwickAddress);
+  // BWICK Wallet supplies BOTH chains; Phantom/Solflare/Keplr each supply
+  // exactly one. Track *which* adapter is actually attached so the per-row
+  // ✓ marks reflect the truth instead of just "any wallet on this chain".
+  const solByBwick = bridge.solWalletName === "BWICK Wallet";
+  const solByPhantom = bridge.solWalletName === "Phantom";
+  const solBySolflare = bridge.solWalletName === "Solflare";
+  const bwickByBwick = bridge.bwickWalletKind === "bwick";
+  const bwickByKeplr = bridge.bwickWalletKind === "keplr";
+  const bothConnected = Boolean(solByBwick && bwickByBwick);
+  const [busyStep, setBusyStep] = useState<
+    null | "solana" | "bwick"
+  >(null);
+  const [stepError, setStepError] = useState<string | null>(null);
+
+  async function connectBoth() {
+    setStepError(null);
+    try {
+      // Sequential, not parallel: each wallet pops its own approval
+      // window and the user can only deal with one at a time. Solana
+      // first so the Pay row updates before we trigger the second
+      // popup.
+      if (!solStandard) {
+        setBusyStep("solana");
+        await bridge.connectSolana("BWICK Wallet");
+      }
+      if (!bwickConnected) {
+        setBusyStep("bwick");
+        await bridge.connectBwick("bwick");
+      }
+      setBusyStep(null);
+      onClose();
+    } catch (err) {
+      setBusyStep(null);
+      setStepError(
+        err instanceof Error ? err.message : "Connection failed",
+      );
+    }
+  }
+
+  // Single-chain wallets — each handles one side only.
+  const singleChainRows: Array<{
+    label: string;
+    sub: string;
+    icon: React.ReactNode;
+    connected: boolean;
+    onClick: () => void;
+  }> = [
+    {
+      label: "Phantom",
+      sub: solByPhantom
+        ? `connected · ${shortAddr(bridge.solAddress!)}`
+        : "Solana wallet",
+      icon: <PhantomLogo />,
+      connected: solByPhantom,
+      onClick: () =>
+        solByPhantom ? undefined : void bridge.connectSolana("Phantom"),
+    },
+    {
+      label: "Solflare",
+      sub: solBySolflare
+        ? `connected · ${shortAddr(bridge.solAddress!)}`
+        : "Solana wallet",
+      icon: <SolflareLogo />,
+      connected: solBySolflare,
+      onClick: () =>
+        solBySolflare ? undefined : void bridge.connectSolana("Solflare"),
+    },
+    {
+      label: "Keplr",
+      sub: bwickByKeplr
+        ? `connected · ${shortAddr(bridge.bwickAddress!)}`
+        : "Cosmos / bwickchain wallet",
+      icon: <KeplrLogo />,
+      connected: bwickByKeplr,
+      onClick: () =>
+        bwickByKeplr ? undefined : void bridge.connectBwick("keplr"),
+    },
   ];
 
   return (
@@ -859,19 +1583,70 @@ function WalletModal({ onClose }: { onClose: () => void }) {
           <span className="text-[18px]">Select your wallet</span>
         </div>
 
-        <div className="mt-4 space-y-2 pb-56">
-          {wallets.map((wallet) => (
-            <button
-              key={wallet.name}
-              className="flex w-full items-center justify-between rounded-2xl px-2 py-2 text-left text-[#d8d9e1] transition hover:bg-white/4"
-            >
-              <span className="flex items-center gap-4 text-[20px] font-medium">
-                {wallet.icon}
-                <span>{wallet.name}</span>
+        <div className="mt-4 space-y-3 pb-2">
+          {/* Featured: BWICK Wallet — one signature covers both chains.
+              Visually separated so it's clear this is its own category. */}
+          <button
+            onClick={() => {
+              if (bothConnected) return;
+              void (async () => {
+                if (!solStandard) {
+                  await bridge.connectSolana("BWICK Wallet");
+                }
+                if (!bwickConnected) {
+                  await bridge.connectBwick("bwick");
+                }
+              })();
+              if (!bothConnected) onClose();
+            }}
+            className="flex w-full items-center justify-between rounded-2xl border border-[#9e79d2]/50 bg-[#9e79d2]/12 px-3 py-2.5 text-left text-[#d8d9e1] transition hover:border-[#9e79d2] hover:bg-[#9e79d2]/20"
+          >
+            <span className="flex items-center gap-4 text-[20px] font-medium">
+              <BwickLogoBadge />
+              <span className="flex flex-col">
+                <span>BWICK Wallet</span>
+                <span className="text-[12px] font-normal text-[#cdb6ec]">
+                  one signature · Solana + bwickchain
+                </span>
               </span>
-              <span className="text-[28px] leading-none text-[#7d8192]">›</span>
-            </button>
-          ))}
+            </span>
+            <span className="text-[28px] leading-none text-[#cdb6ec]">
+              {bothConnected ? "✓" : "›"}
+            </span>
+          </button>
+
+          {/* Per-chain alternatives — for users without the BWICK extension. */}
+          <div className="pt-1">
+            <div className="px-2 pb-1 text-[11px] uppercase tracking-[0.06em] text-[#676b7e]">
+              Or connect each side separately
+            </div>
+            <div className="space-y-2">
+              {singleChainRows.map((row) => (
+                <button
+                  key={row.label}
+                  onClick={() => {
+                    row.onClick();
+                    if (!row.connected) onClose();
+                  }}
+                  className="flex w-full items-center justify-between rounded-2xl px-2 py-2 text-left text-[#d8d9e1] transition hover:bg-white/4"
+                >
+                  <span className="flex items-center gap-4 text-[20px] font-medium">
+                    {row.icon}
+                    <span className="flex flex-col">
+                      <span>{row.label}</span>
+                      <span className="text-[12px] font-normal text-[#7d8192]">
+                        {row.sub}
+                      </span>
+                    </span>
+                  </span>
+                  <span className="text-[28px] leading-none text-[#7d8192]">
+                    {row.connected ? "✓" : "›"}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -879,16 +1654,149 @@ function WalletModal({ onClose }: { onClose: () => void }) {
         onClick={onClose}
         className="mt-5 flex h-[60px] w-full items-center justify-center rounded-full bg-white text-[22px] font-medium text-[#2a2c31] shadow-[0_0_30px_rgba(158,121,210,0.45)]"
       >
-        Cancel
+        Done
       </button>
     </div>
   );
 }
 
 export default function Home() {
+  return (
+    <BridgeProvider>
+      <BridgeInner />
+    </BridgeProvider>
+  );
+}
+
+function SignInButton({
+  bridge,
+  isOpen,
+  onClick,
+}: {
+  bridge: ReturnType<typeof useBridge>;
+  isOpen: boolean;
+  onClick: () => void;
+}) {
+  const solConnected = bridge.solConnected && bridge.solAddress;
+  const bwickConnected = Boolean(bridge.bwickAddress);
+  // BWICK Wallet supplies both chains in one signature, so if both sides
+  // were attached through it, treat the pair as a single wallet (one logo).
+  const bwickProvidedBoth =
+    bridge.solWalletName === "BWICK Wallet" &&
+    bridge.bwickWalletKind === "bwick" &&
+    solConnected &&
+    bwickConnected;
+  const showPhantomBadge =
+    solConnected && !bwickProvidedBoth && bridge.solWalletName === "Phantom";
+  const showSolflareBadge =
+    solConnected && !bwickProvidedBoth && bridge.solWalletName === "Solflare";
+  const showBwickBadge =
+    bwickProvidedBoth ||
+    (bwickConnected && bridge.bwickWalletKind === "bwick");
+  const showKeplrBadge =
+    bwickConnected && !bwickProvidedBoth && bridge.bwickWalletKind === "keplr";
+  const badgeCount =
+    (showPhantomBadge ? 1 : 0) +
+    (showSolflareBadge ? 1 : 0) +
+    (showBwickBadge ? 1 : 0) +
+    (showKeplrBadge ? 1 : 0);
+  const anyConnected = solConnected || bwickConnected;
+
+  const shiftClass = isOpen
+    ? "md:-translate-x-6 lg:-translate-x-10"
+    : "translate-x-0";
+
+  if (!anyConnected) {
+    return (
+      <button
+        onClick={onClick}
+        className={`relative z-10 rounded-full border border-[#fbfbfd1f] bg-[#191b21] px-5 py-3 text-[15px] font-medium text-white shadow-[0_8px_18px_rgba(0,0,0,0.2)] transition-transform duration-300 ease-out hover:border-[#fbfbfd33] ${shiftClass}`}
+      >
+        Sign In
+      </button>
+    );
+  }
+
+  return (
+    <button
+      onClick={onClick}
+      title={
+        [
+          solConnected ? `Solana ${bridge.solAddress}` : null,
+          bwickConnected ? `bwickchain ${bridge.bwickAddress}` : null,
+        ]
+          .filter(Boolean)
+          .join("\n")
+      }
+      className={`relative z-10 flex items-center gap-2.5 rounded-full border border-[#fbfbfd1f] bg-[#191b21] py-1.5 pl-1.5 pr-3.5 text-white shadow-[0_8px_18px_rgba(0,0,0,0.2)] transition-[transform,border-color] duration-300 ease-out hover:border-[#fbfbfd33] ${shiftClass}`}
+    >
+      <span
+        className={`relative flex h-7 items-center ${badgeCount === 2 ? "w-[42px]" : "w-7"}`}
+      >
+        {(() => {
+          const badges: React.ReactNode[] = [];
+          if (showPhantomBadge) badges.push(<PhantomLogo key="phantom" />);
+          if (showSolflareBadge) badges.push(<SolflareLogo key="solflare" />);
+          if (showKeplrBadge) badges.push(<KeplrLogo key="keplr" />);
+          if (showBwickBadge) badges.push(<BwickLogoBadge key="bwick" />);
+          return badges.slice(0, 2).map((node, i) => (
+            <span
+              key={i}
+              className={`absolute flex h-7 w-7 items-center justify-center rounded-full ring-2 ring-[#191b21] ${
+                i === 0 ? "left-0" : "left-[14px]"
+              }`}
+            >
+              {node}
+            </span>
+          ));
+        })()}
+      </span>
+      <span className="flex flex-col items-start leading-tight">
+        <span className="text-[10px] font-semibold uppercase leading-[12px] tracking-[0.1em] text-[#34d399]">
+          Connected
+        </span>
+        <span className="font-mono text-[12.5px] leading-[15px] tracking-[-0.01em] text-[#e5e7eb]">
+          {solConnected && bwickConnected
+            ? `${shortAddr(bridge.solAddress!, 4, 4)} · ${shortAddr(bridge.bwickAddress!, 6, 4)}`
+            : solConnected
+              ? shortAddr(bridge.solAddress!, 6, 4)
+              : shortAddr(bridge.bwickAddress!, 6, 4)}
+        </span>
+      </span>
+    </button>
+  );
+}
+
+function BridgeInner() {
+  const bridge = useBridge();
   const [cardView, setCardView] = useState<CardView>("swap");
+  // Which side of the bridge the picker is editing: "pay" (sending) or
+  // "receive". When the user commits a "pay" pick we auto-advance to
+  // the "receive" picker so the flow is a single guided sequence.
+  const [pickerMode, setPickerMode] = useState<"pay" | "receive">("pay");
   const [isSignInSidebarOpen, setIsSignInSidebarOpen] = useState(false);
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
+
+  // What chain is on each side, derived from bridge.direction.
+  const payChain: ChainName =
+    bridge.direction === "sol_to_bwick" ? "Solana" : "bwickchain";
+  const receiveChain: ChainName =
+    bridge.direction === "sol_to_bwick" ? "bwickchain" : "Solana";
+
+  function handlePickerCommit(chain: ChainName) {
+    if (pickerMode === "pay") {
+      // Setting the Pay chain implicitly sets the direction. If the
+      // pick keeps Pay the same we no-op; otherwise we flip.
+      if (chain !== payChain) bridge.flip();
+      setPickerMode("receive");
+      // Stay on the picker view so the user immediately sees the
+      // receive step with the other chain greyed in/selected.
+    } else {
+      if (chain !== receiveChain) bridge.flip();
+      setCardView("swap");
+      setPickerMode("pay");
+    }
+  }
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -936,14 +1844,11 @@ export default function Home() {
           </span>
         </button>
 
-        <button
+        <SignInButton
+          bridge={bridge}
+          isOpen={isSignInSidebarOpen}
           onClick={() => setIsSignInSidebarOpen(true)}
-          className={`relative z-10 rounded-full bg-[#191b21] px-5 py-3 text-[15px] font-medium text-white shadow-[0_8px_18px_rgba(0,0,0,0.2)] ring-1 ring-white/6 transition-transform duration-300 ease-out ${
-            isSignInSidebarOpen ? "md:-translate-x-6 lg:-translate-x-10" : "translate-x-0"
-          }`}
-        >
-          Sign In
-        </button>
+        />
       </div>
 
       <section
@@ -951,28 +1856,39 @@ export default function Home() {
       >
         <div className="w-full max-w-[480px] overflow-hidden rounded-[30px] border border-[#fbfbfd1a] bg-[#17191c] text-[#d1d6e0] shadow-[0px_2px_4px_0px_rgba(0,0,0,0.2),0px_5px_50px_-1px_rgba(0,0,0,0.33)] outline outline-1 outline-[#fbfbfd1a]">
           {cardView === "wallet" ? (
-            <WalletModal onClose={() => setCardView("swap")} />
+            <WalletModal onClose={() => setCardView("swap")} bridge={bridge} />
           ) : cardView === "settings" ? (
             <SettingsView onClose={() => setCardView("swap")} />
           ) : cardView === "history" ? (
-            <HistoryView onBack={() => setCardView("swap")} />
+            <HistoryView onBack={() => setCardView("swap")} bridge={bridge} />
+          ) : cardView === "info" ? (
+            <InfoView onBack={() => setCardView("swap")} />
           ) : cardView === "token" ? (
-            <TokenPicker onBack={() => setCardView("swap")} />
+            <TokenPicker
+              onBack={() => {
+                setCardView("swap");
+                setPickerMode("pay");
+              }}
+              mode={pickerMode}
+              otherChain={pickerMode === "pay" ? receiveChain : payChain}
+              onCommit={handlePickerCommit}
+            />
           ) : (
             <>
               <nav className="flex max-h-[120px] flex-row-reverse bg-[#17191c] px-[15px] pt-6 text-[#d1d6e0]">
                 <span className="flex flex-1 items-center justify-end gap-2">
                   <button
+                    onClick={() => setCardView("info")}
+                    aria-label="How it works"
+                    className="flex h-10 min-w-[40px] items-center justify-center rounded-[20px] border border-[#fbfbfd1a] bg-[#292c32] text-[#d1d6e0] transition hover:border-[#fbfbfd54]"
+                  >
+                    <span className="text-[16px] leading-none font-medium">?</span>
+                  </button>
+                  <button
                     onClick={() => setCardView("history")}
                     className="flex h-10 min-w-[60px] items-center justify-center rounded-[20px] border border-[#fbfbfd1a] bg-[#292c32] text-[#d1d6e0] transition hover:border-[#fbfbfd54]"
                   >
                     <ClockIcon />
-                  </button>
-                  <button
-                    onClick={() => setCardView("settings")}
-                    className="flex h-10 min-w-[60px] items-center justify-center rounded-[20px] border border-[#fbfbfd1a] bg-[#292c32] text-[#d1d6e0] transition hover:border-[#fbfbfd54]"
-                  >
-                    <SettingsIcon />
                   </button>
                 </span>
               </nav>
@@ -997,41 +1913,77 @@ export default function Home() {
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg border border-[#fbfbfd1a] bg-[#9e79d2] text-[#17191c]">
                       <WalletIcon />
                     </span>
-                    <span className="text-[17px] leading-[18px] text-[#9e79d2]">Connect wallet</span>
+                    <span className="text-[17px] leading-[18px] text-[#9e79d2]">
+                      {bridge.direction === "sol_to_bwick"
+                        ? bridge.solConnected && bridge.solAddress
+                          ? shortAddr(bridge.solAddress)
+                          : "Connect Solana"
+                        : bridge.bwickAddress
+                          ? shortAddr(bridge.bwickAddress)
+                          : "Connect bwickchain"}
+                    </span>
                     <SelectorArrowIcon className="h-4 w-4 text-[#9e79d2] opacity-70" />
                   </button>
                 </header>
 
                 <div className="px-4">
                   <div className="relative w-fit">
-                    <PayAssetSelector />
+                    <PayAssetSelector
+                      direction={bridge.direction}
+                      onClick={() => {
+                        setPickerMode("pay");
+                        setCardView("token");
+                      }}
+                    />
                   </div>
                 </div>
 
                 <div className="flex w-full flex-col">
-                  <div className="h-[65px] px-2 pt-1 text-[54px] font-normal text-[#676b7e] md:h-[75px] md:px-4">
-                    <div className="flex h-[55px] w-full items-center rounded-[10px] bg-transparent px-2">0</div>
+                  <div className="h-[65px] px-2 pt-1 text-[54px] font-normal text-white md:h-[75px] md:px-4">
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={bridge.amount}
+                      onChange={(e) => bridge.setAmount(e.target.value.replace(/[^0-9.]/g, ""))}
+                      placeholder="0"
+                      className="flex h-[55px] w-full items-center rounded-[10px] bg-transparent px-2 text-[54px] font-normal text-white placeholder:text-[#676b7e] focus:outline-none"
+                    />
                   </div>
 
                   <footer className="flex h-8 items-center justify-between gap-2 px-2 text-[#676b7e] md:px-4">
-                    <button className="flex h-7 items-center gap-1.5 rounded-[10px] px-2 transition hover:bg-[#fbfbfd1a]">
-                      <MoneyIcon />
-                      <span className="flex items-center text-[#676b7e]">
-                        <span className="text-[14px] opacity-70">$</span>
-                        <span className="text-[14px]">0</span>
-                      </span>
-                    </button>
                     <div className="flex h-7 items-center gap-1.5 rounded-[10px] px-2">
-                      <span className="text-[14px] opacity-70">Balance</span>
-                      <span className="text-[14px]">0</span>
+                      {bridge.amountError ? (
+                        <span className="text-[13px] text-red-300">
+                          {bridge.amountError}
+                        </span>
+                      ) : (
+                        <>
+                          <MoneyIcon />
+                          <span className="flex items-center text-[#676b7e]">
+                            <span className="text-[14px] opacity-70">$</span>
+                            <span className="text-[14px]">{bridge.amount || "0"}</span>
+                          </span>
+                        </>
+                      )}
                     </div>
+                    <button
+                      onClick={() => bridge.setMaxAmount()}
+                      className="flex h-7 items-center gap-1.5 rounded-[10px] px-2 transition hover:bg-[#fbfbfd1a]"
+                    >
+                      <span className="text-[14px] opacity-70">Max</span>
+                      <span className="text-[14px]">{bridge.payBalance}</span>
+                    </button>
                   </footer>
                 </div>
               </section>
 
               <aside className="flex h-[50px] w-full items-center justify-center border-t border-[#fbfbfd1a] bg-[#17191c] px-2 py-1 text-[#676b7e] md:px-4">
                 <div className="flex h-10 w-8 items-center justify-center">
-                  <button className="flex h-10 min-w-[60px] items-center justify-center rounded-[15px] px-2 text-[#d1d6e0]">
+                  <button
+                    onClick={bridge.flip}
+                    aria-label="Flip direction"
+                    className="flex h-10 min-w-[60px] items-center justify-center rounded-[15px] px-2 text-[#d1d6e0] transition hover:bg-[#fbfbfd1a]"
+                  >
                     <FlipArrowIcon />
                   </button>
                 </div>
@@ -1039,20 +1991,41 @@ export default function Home() {
 
               <section className="relative flex w-full flex-col border-t border-[#fbfbfd1a] bg-[#17191c] pb-4">
                 <header className="flex h-12 items-center px-4 py-1">
-                  <div className="flex h-8 items-center gap-2 rounded-[10px] px-2 text-[#676b7e]">
+                  <button
+                    onClick={() => setCardView("wallet")}
+                    className="flex h-8 items-center gap-2 rounded-[10px] px-2 text-[#676b7e] transition hover:bg-[#fbfbfd1a]"
+                  >
                     <span className="text-[17px] leading-[18px]">Receive</span>
-                  </div>
+                    <span className="text-[17px] leading-[18px] text-[#676b7e]">:</span>
+                    <span className="text-[17px] leading-[18px] text-[#9e79d2]">
+                      {bridge.direction === "sol_to_bwick"
+                        ? bridge.bwickAddress
+                          ? shortAddr(bridge.bwickAddress)
+                          : "Connect bwickchain"
+                        : bridge.solConnected && bridge.solAddress
+                          ? shortAddr(bridge.solAddress)
+                          : "Connect Solana"}
+                    </span>
+                  </button>
                 </header>
 
                 <div className="px-4">
                   <div className="relative w-fit">
-                    <ReceiveAssetSelector onClick={() => setCardView("token")} />
+                    <ReceiveAssetSelector
+                      onClick={() => {
+                        setPickerMode("receive");
+                        setCardView("token");
+                      }}
+                      direction={bridge.direction}
+                    />
                   </div>
                 </div>
 
                 <div className="flex w-full flex-col">
-                  <div className="h-[65px] px-2 pt-1 text-[54px] font-normal text-[#676b7e] opacity-50 md:h-[75px] md:px-4">
-                    <div className="flex h-[55px] w-full items-center rounded-[10px] bg-transparent px-2">0</div>
+                  <div className="h-[65px] px-2 pt-1 text-[54px] font-normal text-[#676b7e] md:h-[75px] md:px-4">
+                    <div className="flex h-[55px] w-full items-center rounded-[10px] bg-transparent px-2">
+                      {bridge.amount || "0"}
+                    </div>
                   </div>
 
                   <footer className="flex h-8 items-center justify-between gap-2 px-2 text-[#676b7e] md:px-4">
@@ -1060,38 +2033,74 @@ export default function Home() {
                       <MoneyIcon />
                       <span className="flex items-center text-[#676b7e]">
                         <span className="text-[14px] opacity-70">$</span>
-                        <span className="text-[14px]">0</span>
+                        <span className="text-[14px]">{bridge.amount || "0"}</span>
                       </span>
                     </div>
                     <div className="flex h-7 items-center gap-1.5 rounded-[10px] px-2">
                       <span className="text-[14px] opacity-70">Balance</span>
-                      <span className="text-[14px]">0</span>
+                      <span className="text-[14px]">{bridge.receiveBalance}</span>
                     </div>
                   </footer>
                 </div>
               </section>
 
+              {bridge.phase.kind !== "idle" ? (
+                <div className="px-4 pb-2 pt-1">
+                  <PhaseBanner phase={bridge.phase} />
+                </div>
+              ) : null}
+
               <div className="h-full max-h-[80px] px-4 pb-4">
-                <button
-                  onClick={() => setCardView("wallet")}
-                  className="relative flex h-[60px] w-full items-center justify-center overflow-hidden rounded-full border border-[#fbfbfd1a] bg-[#9e79d2] text-[#fbfbfd] transition hover:border-[#fbfbfd54]"
-                >
-                  <span className="relative z-10 px-6 text-[22px] leading-[22px] font-normal">Connect</span>
-                </button>
+                {(() => {
+                  const walletsReady =
+                    bridge.solConnected && bridge.bwickAddress;
+                  const inFlight =
+                    bridge.phase.kind === "submitting" ||
+                    bridge.phase.kind === "solana-confirming" ||
+                    bridge.phase.kind === "polling-bwick" ||
+                    bridge.phase.kind === "polling-solana";
+                  const allowed = !inFlight && (
+                    !walletsReady || bridge.isAmountValid || bridge.phase.kind === "done"
+                  );
+                  const label = !walletsReady
+                    ? "Connect"
+                    : inFlight
+                      ? bridge.phase.kind === "submitting" ||
+                        bridge.phase.kind === "solana-confirming"
+                        ? "Signing…"
+                        : "Bridging…"
+                      : bridge.phase.kind === "done"
+                        ? "Bridge again"
+                        : bridge.amount.trim().length === 0
+                          ? "Enter an amount"
+                          : bridge.amountError
+                            ? bridge.amountError
+                            : `Bridge ${bridge.amount} BWICK`;
+                  return (
+                    <button
+                      onClick={() => {
+                        if (!walletsReady) {
+                          setCardView("wallet");
+                          return;
+                        }
+                        if (bridge.isAmountValid) void bridge.submit();
+                      }}
+                      disabled={!allowed}
+                      className="relative flex h-[60px] w-full items-center justify-center overflow-hidden rounded-full border border-[#fbfbfd1a] bg-[#9e79d2] text-[#fbfbfd] transition hover:border-[#fbfbfd54] disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      <span className="relative z-10 px-6 text-[22px] leading-[22px] font-normal">
+                        {label}
+                      </span>
+                    </button>
+                  );
+                })()}
               </div>
             </>
           )}
         </div>
       </section>
 
-      <div className="fixed bottom-4 right-4">
-        <button className="flex items-center gap-2 rounded-full bg-[#363946]/90 px-4 py-2 text-[16px] text-[#ededf3] ring-1 ring-white/10 backdrop-blur">
-          <span>Get help</span>
-          <ExternalIcon />
-        </button>
-      </div>
-
-      {isSignInSidebarOpen ? <SignInSidebar onClose={() => setIsSignInSidebarOpen(false)} /> : null}
+      {isSignInSidebarOpen ? <SignInSidebar onClose={() => setIsSignInSidebarOpen(false)} bridge={bridge} /> : null}
 
       {isLeftSidebarOpen ? <LeftSidebar onClose={() => setIsLeftSidebarOpen(false)} /> : null}
 

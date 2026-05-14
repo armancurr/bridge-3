@@ -34,34 +34,47 @@ export default function HomePage() {
             </div>
           </div>
 
-          <header className="relative z-20 grid grid-cols-[1fr_auto_1fr] items-center px-6 pt-6">
-            <nav className="flex items-center gap-7 text-[16px] font-normal text-[#222222]">
-              <Image src="/bwick.webp" alt="BWICK" width={40} height={40} className="h-10 w-10 object-contain" />
+          <header className="relative z-20 grid grid-cols-[1fr_auto_1fr] items-center px-5 pt-5">
+            <nav className="flex items-center gap-7 text-[14px] font-normal text-[#111111]/80">
+              <Image
+                src="/bwick.webp"
+                alt="BWICK"
+                width={37}
+                height={37}
+                className="h-[37px] w-[37px] object-contain"
+              />
               <a href="#" className="inline-flex items-center gap-1">
-                Build <span className="text-[14px]">⌄</span>
+                Build <span aria-hidden="true">⌄</span>
               </a>
               <a href="#" className="inline-flex items-center gap-1">
-                Connect <span className="text-[14px]">⌄</span>
+                Connect <span aria-hidden="true">⌄</span>
               </a>
               <a href="#" className="inline-flex items-center gap-1">
-                Institutions <span className="text-[14px]">⌄</span>
+                Institutions <span aria-hidden="true">⌄</span>
               </a>
               <a href="#" className="inline-flex items-center gap-1">
-                About <span className="text-[14px]">⌄</span>
+                About <span aria-hidden="true">⌄</span>
               </a>
             </nav>
 
-            <div className="flex h-12 w-[270px] items-center gap-3 rounded-full bg-white/85 px-4 text-[#8b91aa] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.08),0_2px_10px_rgba(0,0,0,0.08)]">
-              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current stroke-2">
+            <div className="flex h-11 w-[250px] items-center gap-3 rounded-full bg-white/90 px-4 text-[16px] font-normal text-[#8b90a6] shadow-sm">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-5 w-5 flex-none"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <circle cx="11" cy="11" r="7" />
                 <path d="m16 16 4 4" />
               </svg>
-              <span className="text-[18px] font-normal">Search any token</span>
+              <span>Search any token</span>
             </div>
 
             <Link
               href="/bridge"
-              className="ml-auto inline-flex h-12 items-center rounded-full bg-[#ecff3b] px-6 text-[16px] font-normal text-[#111111] shadow-[0_4px_12px_rgba(236,255,59,0.3)] transition hover:brightness-95"
+              className="justify-self-end inline-flex h-10 items-center rounded-full bg-[#ecff3b] px-6 text-[14px] font-normal text-[#111111] shadow-[0_4px_12px_rgba(236,255,59,0.3)] transition hover:brightness-95"
             >
               Bridge
             </Link>
@@ -72,13 +85,13 @@ export default function HomePage() {
               <h1
                 className={`${bagossCondensed.className} text-[64px] leading-[0.85] tracking-[-0.05em] text-[#111111] sm:text-[90px] md:text-[110px] lg:text-[128px]`}
               >
-                <span className="block">100 CHAINS</span>
-                <span className="block">20K TOKENS</span>
-                <span className="block">1SQUID</span>
+                <span className="block">2 CHAINS</span>
+                <span className="block">1 TOKEN</span>
+                <span className="block">BWICK BY BWICK</span>
               </h1>
 
               <p className="mt-6 text-[16px] font-medium text-[#111111]/80">
-                The whole of crypto, connected.
+                Favoring degens, not extractors.
               </p>
 
               <div className="mt-8 flex items-center gap-3">
