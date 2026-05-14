@@ -17,25 +17,28 @@ export default function HomePage() {
             alt=""
             fill
             priority
+            sizes="100vw"
             className="object-cover object-center"
           />
         </div>
 
         <div className="relative z-10 flex h-full flex-col">
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-0 flex justify-center px-4 sm:px-6">
-            <div className="relative aspect-[1400/900] w-[92vw] max-w-[720px] sm:w-full sm:max-w-[860px] lg:max-w-[1000px]">
-              <Image
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-40 flex justify-center px-0 sm:top-[-3vh] sm:px-6 lg:top-[-4vh]">
+            <div className="relative aspect-[1400/900] w-[min(80vw,420px)] max-w-none sm:w-full sm:max-w-[400px] md:max-w-[500px] lg:max-w-[720px] xl:max-w-[860px] 2xl:max-w-[1000px]">
+<Image
                 src="/7356fd7d-d9de-4b61-9b9e-6dc63b7e58a4.webp"
                 alt="Squid hero artwork"
                 fill
                 priority
-                className="object-contain object-top"
+                sizes="(max-width: 639px) 130vw, (max-width: 1023px) 100vw, 1000px"
+                className="hero-artwork object-contain object-top"
+                style={{ animationDelay: "250ms" }}
               />
             </div>
           </div>
 
-          <header className="relative z-20 grid grid-cols-[1fr_auto_1fr] items-center px-5 pt-5">
-            <nav className="flex items-center gap-7 text-[14px] font-normal text-[#111111]/80">
+          <header className="relative z-20 flex items-center px-5 pt-5">
+            <div>
               <Image
                 src="/bwick.webp"
                 alt="BWICK"
@@ -43,58 +46,42 @@ export default function HomePage() {
                 height={37}
                 className="h-[37px] w-[37px] object-contain"
               />
-              <a href="#" className="inline-flex items-center gap-1">
-                Build <span aria-hidden="true">⌄</span>
-              </a>
-              <a href="#" className="inline-flex items-center gap-1">
-                Connect <span aria-hidden="true">⌄</span>
-              </a>
-              <a href="#" className="inline-flex items-center gap-1">
-                Institutions <span aria-hidden="true">⌄</span>
-              </a>
-              <a href="#" className="inline-flex items-center gap-1">
-                About <span aria-hidden="true">⌄</span>
-              </a>
-            </nav>
-
-            <div className="flex h-11 w-[250px] items-center gap-3 rounded-full bg-white/90 px-4 text-[16px] font-normal text-[#8b90a6] shadow-sm">
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 24 24"
-                className="h-5 w-5 flex-none"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <circle cx="11" cy="11" r="7" />
-                <path d="m16 16 4 4" />
-              </svg>
-              <span>Search any token</span>
             </div>
-
-            <Link
-              href="/bridge"
-              className="justify-self-end inline-flex h-10 items-center rounded-full bg-[#ecff3b] px-6 text-[14px] font-normal text-[#111111] shadow-[0_4px_12px_rgba(236,255,59,0.3)] transition hover:brightness-95"
-            >
-              Bridge
-            </Link>
           </header>
 
-          <div className="relative flex flex-1 flex-col items-center justify-end pb-[10vh] text-center">
+          <div className="relative z-30 flex flex-1 flex-col items-center justify-end pb-[10vh] text-center">
             <div className="flex flex-col items-center">
               <h1
                 className={`${bagossCondensed.className} text-[64px] leading-[0.85] tracking-[-0.05em] text-[#111111] sm:text-[90px] md:text-[110px] lg:text-[128px]`}
               >
-                <span className="hero-line block [animation-delay:0ms]">100 CHAINS</span>
-                <span className="hero-line block [animation-delay:140ms]">20K TOKENS</span>
-                <span className="hero-line block [animation-delay:280ms]">1 SQUID</span>
+                <span className="hero-line-mask block">
+                  <span className="hero-line-token inline-block" style={{ animationDelay: "0ms" }}>
+                    100
+                  </span>{" "}
+                  <span className="hero-line-token inline-block" style={{ animationDelay: "70ms" }}>
+                    CHAINS
+                  </span>
+                </span>
+                <span className="hero-line-mask block">
+                  <span className="hero-line-token inline-block" style={{ animationDelay: "140ms" }}>
+                    20K
+                  </span>{" "}
+                  <span className="hero-line-token inline-block" style={{ animationDelay: "210ms" }}>
+                    TOKENS
+                  </span>
+                </span>
+                <span className="hero-line-mask block">
+                  <span className="hero-line-token inline-block" style={{ animationDelay: "280ms" }}>
+                    1 SQUID
+                  </span>
+                </span>
               </h1>
 
-              <p className="mt-6 text-[16px] font-medium text-[#111111]/80">
+              <p className="hero-fade-up mt-6 text-[16px] font-medium text-[#111111]/80" style={{ animationDelay: "360ms" }}>
                 Favoring degens, not extractors.
               </p>
 
-              <div className="mt-8 flex items-center gap-3">
+              <div className="hero-fade-up mt-8 flex items-center gap-3" style={{ animationDelay: "430ms" }}>
                 <Link
                   href="/bridge"
                   className="inline-flex h-11 items-center rounded-full bg-[#ecff3b] px-7 text-[15px] font-normal text-[#111111] transition hover:brightness-95"
