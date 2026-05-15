@@ -1,6 +1,31 @@
 "use client";
 
 import Image from "next/image";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowsLeftRight,
+  ArrowSquareOut,
+  BookOpenText,
+  Browser,
+  CaretRight,
+  Check,
+  ClockCounterClockwise,
+  DiscordLogo,
+  GearSix,
+  GlobeHemisphereWest,
+  House,
+  LinkSimple,
+  List,
+  MagnifyingGlass,
+  PuzzlePiece,
+  Question,
+  SlidersHorizontal,
+  Sparkle,
+  Wallet,
+  X,
+  XLogo,
+} from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { BridgeProvider } from "./BridgeProvider";
 import { useBridge, type Phase } from "./useBridge";
@@ -8,85 +33,30 @@ import { isUiTx } from "./ui-tx-tracker";
 
 type CardView = "swap" | "wallet" | "token" | "history" | "settings" | "info";
 
-function SquidMark() {
+function BwickMark() {
   return (
-    <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden="true">
-      <circle cx="16" cy="16" r="14" fill="#f4f2f8" />
-      <path
-        d="M12 7.5c-2.8 0-4.8 2.2-4.8 5.2 0 1.8.7 3.4 2 4.5l4.4 3.8c1.2 1 1.8 2.3 1.8 3.8 0 .8-.2 1.5-.5 2.2-2.7-.5-5.3-2.4-6.8-5.2-2-3.8-1.3-8.8 1.9-12 1-.9 2.4-1.6 3.8-2 .5-.2.8 0 .8.4 0 .6-.6 1.1-1.1 1.6-.4.4-.9.9-1.5 1.7z"
-        fill="#1a1b20"
-      />
-      <path
-        d="M20 24.5c2.8 0 4.8-2.2 4.8-5.2 0-1.8-.7-3.4-2-4.5l-4.4-3.8c-1.2-1-1.8-2.3-1.8-3.8 0-.8.2-1.5.5-2.2 2.7.5 5.3 2.4 6.8 5.2 2 3.8 1.3 8.8-1.9 12-1 .9-2.4 1.6-3.8 2-.5.2-.8 0-.8-.4 0-.6.6-1.1 1.1-1.6.4-.4.9-.9 1.5-1.7z"
-        fill="#1a1b20"
-      />
-    </svg>
+    <Image src="/tokens/bwick.png" alt="bwick" width={24} height={24} className="h-6 w-6 rounded-full" />
   );
 }
 
 function MenuIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
+  return <List weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function SwapIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path
-        d="M7 7h11m0 0-3-3m3 3-3 3M17 17H6m0 0 3 3m-3-3 3-3"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+  return <ArrowsLeftRight weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function ClockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.9" fill="none" />
-      <path d="M12 7v5l3 3" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
+  return <ClockCounterClockwise weight="fill" className="h-6 w-6" aria-hidden="true" />;
 }
 
 function SettingsIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-      <path
-        d="M11.0195 3.55153C11.6283 3.20907 12.3717 3.20907 12.9805 3.55153L18.9805 6.92649C19.6103 7.28073 20 7.9471 20 8.66965V15.3302C20 16.0528 19.6103 16.7192 18.9805 17.0734L12.9805 20.4484C12.3717 20.7908 11.6283 20.7908 11.0195 20.4484L5.01954 17.0737C4.38975 16.7195 4 16.0531 4 15.3305L4 8.66963C4 7.94707 4.38973 7.2807 5.01949 6.92647L11.0195 3.55153Z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="square"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path
-        d="M15 12C15 13.6569 13.6569 15 12 15C10.3432 15 9.00003 13.6569 9.00003 12C9.00003 10.3431 10.3432 9 12 9C13.6569 9 15 10.3431 15 12Z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="square"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </svg>
-  );
+  return <GearSix weight="fill" className="h-6 w-6" aria-hidden="true" />;
 }
 
 function ExternalIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
-      <path d="M14 5h5v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M10 14 19 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <path d="M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
+  return <ArrowSquareOut weight="fill" className="h-4 w-4" aria-hidden="true" />;
 }
 
 function MoneyIcon() {
@@ -96,28 +66,11 @@ function MoneyIcon() {
 }
 
 function WalletIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" aria-hidden="true">
-      <path
-        d="M4 7.75A2.75 2.75 0 0 1 6.75 5h9.5A2.75 2.75 0 0 1 19 7.75V9h-2.75A3.25 3.25 0 0 0 13 12.25v.5A3.25 3.25 0 0 0 16.25 16H19v.25A2.75 2.75 0 0 1 16.25 19h-9.5A2.75 2.75 0 0 1 4 16.25v-8.5Z"
-        fill="currentColor"
-      />
-      <path
-        d="M14.5 12.25A1.75 1.75 0 0 1 16.25 10.5H20v4h-3.75a1.75 1.75 0 0 1-1.75-1.75v-.5Z"
-        fill="#191b1f"
-      />
-      <circle cx="16.75" cy="12.5" r="0.9" fill="currentColor" />
-    </svg>
-  );
+  return <Wallet weight="fill" className="h-4.5 w-4.5" aria-hidden="true" />;
 }
 
 function SearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" fill="none" />
-      <path d="m16.5 16.5 3.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
+  return <MagnifyingGlass weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function WalletConnectIcon() {
@@ -218,11 +171,7 @@ function BwickLogoBadge() {
 function BrowserExtensionIcon() {
   return (
     <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#b184e6] text-white">
-      <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-        <rect x="4" y="5" width="16" height="14" rx="2" fill="currentColor" />
-        <rect x="6.5" y="8" width="11" height="8" rx="1" fill="#ffffff" />
-        <path d="M8 3.75h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      </svg>
+      <Browser weight="fill" className="h-5 w-5" aria-hidden="true" />
     </span>
   );
 }
@@ -239,107 +188,31 @@ function BrowseWalletsIcon() {
 }
 
 function CloseIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path d="m7 7 10 10M17 7 7 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
+  return <X weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function HomeIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path
-        d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+  return <House weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function SupportIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path
-        d="M12 21a8 8 0 0 0 8-8V12a8 8 0 0 0-16 0v1a8 8 0 0 0 8 8Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      />
-      <path d="M7 13v2M17 13v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <path d="M9 18c.7-.6 1.8-1 3-1s2.3.4 3 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-    </svg>
-  );
+  return <Question weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function LinkIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path
-        d="M10 13a5 5 0 0 0 7.1 0l1.4-1.4a5 5 0 0 0-7.1-7.1L10 4.9"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14 11a5 5 0 0 0-7.1 0L5.5 12.4a5 5 0 1 0 7.1 7.1L14 19.1"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+  return <LinkSimple weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function BookIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path
-        d="M6 4h10a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2V6a2 2 0 0 1 2-2Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path d="M8 8h8M8 12h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
+  return <BookOpenText weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function PuzzleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path
-        d="M9 7a2 2 0 1 1 4 0v1h3a2 2 0 0 1 2 2v2h-1a2 2 0 1 0 0 4h1v2a2 2 0 0 1-2 2h-3v-1a2 2 0 1 0-4 0v1H6a2 2 0 0 1-2-2v-3h1a2 2 0 1 0 0-4H4v-3a2 2 0 0 1 2-2h3V7Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+  return <PuzzlePiece weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function GlobeIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
-      <path d="M3 12h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <path
-        d="M12 3c2.6 2.4 4 5.4 4 9s-1.4 6.6-4 9c-2.6-2.4-4-5.4-4-9s1.4-6.6 4-9Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      />
-    </svg>
-  );
+  return <GlobeHemisphereWest weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function LeftSidebar({ onClose }: { onClose: () => void }) {
@@ -350,8 +223,8 @@ function LeftSidebar({ onClose }: { onClose: () => void }) {
     >
       <div className="flex items-center justify-between gap-4 px-4 pt-4 text-[#d1d6e0]">
         <div className="flex items-center gap-3">
-          <SquidMark />
-          <span className="text-[18px] leading-[18px] text-[#fbfbfd]">Squid</span>
+          <BwickMark />
+          <span className="text-[18px] leading-[18px] text-[#fbfbfd]">bwick</span>
         </div>
         <button
           type="button"
@@ -385,15 +258,21 @@ function LeftSidebar({ onClose }: { onClose: () => void }) {
 
         <div className="mt-5 px-4 text-[14px] leading-[14px] text-[#676b7e]">Social</div>
         <a href="#" className="mt-2 flex items-center gap-3 rounded-2xl px-4 py-2 text-[18px] hover:bg-white/4">
-          <span className="text-[#cfd3dd]">D</span>
+          <span className="text-[#cfd3dd]">
+            <DiscordLogo weight="fill" className="h-5 w-5" aria-hidden="true" />
+          </span>
           <span>Discord</span>
         </a>
         <a href="#" className="mt-1 flex items-center gap-3 rounded-2xl px-4 py-2 text-[18px] hover:bg-white/4">
-          <span className="text-[#cfd3dd]">X</span>
+          <span className="text-[#cfd3dd]">
+            <XLogo weight="fill" className="h-5 w-5" aria-hidden="true" />
+          </span>
           <span>x.com</span>
         </a>
         <a href="#" className="mt-1 flex items-center gap-3 rounded-2xl px-4 py-2 text-[18px] hover:bg-white/4">
-          <span className="text-[#cfd3dd]">M</span>
+          <span className="text-[#cfd3dd]">
+            <BookOpenText weight="fill" className="h-5 w-5" aria-hidden="true" />
+          </span>
           <span>Mirror</span>
         </a>
 
@@ -427,31 +306,15 @@ function LeftSidebar({ onClose }: { onClose: () => void }) {
 }
 
 function SlidersIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path d="M6 7v10M12 4v16M18 9v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <circle cx="6" cy="10" r="1.5" fill="currentColor" />
-      <circle cx="12" cy="8" r="1.5" fill="currentColor" />
-      <circle cx="18" cy="13" r="1.5" fill="currentColor" />
-    </svg>
-  );
+  return <SlidersHorizontal weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function SparkIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path
-        d="m12 3 1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3Zm6.5 10.5.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8ZM5.5 14.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
+  return <Sparkle weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function HelpIcon() {
-  return (
-    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#676b7e] text-[14px] font-medium text-[#17191c]">?</span>
-  );
+  return <Question weight="fill" className="h-6 w-6" aria-hidden="true" />;
 }
 
 function ToggleOff() {
@@ -463,30 +326,15 @@ function ToggleOff() {
 }
 
 function BackIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-      <path d="M10 6 4 12l6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M5 12h15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
+  return <ArrowLeft weight="fill" className="h-6 w-6" aria-hidden="true" />;
 }
 
 function ChainLinkIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path d="M10 8.5 8.5 7A4 4 0 1 0 2.8 12.7l1.5 1.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <path d="M14 15.5 15.5 17a4 4 0 0 0 5.7-5.7l-1.5-1.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <path d="m8 16 8-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
+  return <LinkSimple weight="fill" className="h-5 w-5" aria-hidden="true" />;
 }
 
 function SparkleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
-      <path d="m12 3 1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6L12 3Z" fill="currentColor" />
-    </svg>
-  );
+  return <Sparkle weight="fill" className="h-4 w-4" aria-hidden="true" />;
 }
 
 function AssetIcon({
@@ -512,33 +360,11 @@ function AssetIcon({
 }
 
 function SelectorArrowIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 16 16" className={className} aria-hidden="true">
-      <path
-        d="M6.66675 14L9.64035 8.64754C9.86407 8.24484 9.86407 7.75519 9.64035 7.35249L6.66675 2"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </svg>
-  );
+  return <CaretRight weight="fill" className={className} aria-hidden="true" />;
 }
 
 function FlipArrowIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-      <path
-        d="M18 14.5L12 20.5L6 14.5M12 19.5V4.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </svg>
-  );
+  return <ArrowDown weight="fill" className="h-6 w-6" aria-hidden="true" />;
 }
 
 function shortAddr(a: string, head = 6, tail = 4): string {
@@ -573,9 +399,7 @@ function PhaseBanner({ phase }: { phase: Phase }) {
       <div className="rounded-[14px] border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-emerald-100">
         <div className="flex items-start gap-3">
           <span className="mt-[2px] flex h-7 w-7 flex-none items-center justify-center rounded-full bg-emerald-500/20 ring-1 ring-emerald-400/50">
-            <svg viewBox="0 0 24 24" className="h-4 w-4 text-emerald-300" aria-hidden="true">
-              <path d="M5 12.5 10 17.5 19.5 8" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-            </svg>
+            <Check weight="fill" className="h-4 w-4 text-emerald-300" aria-hidden="true" />
           </span>
           <div className="flex flex-1 flex-col gap-1.5">
             <div className="text-[14px] font-medium leading-[18px]">
@@ -1807,7 +1631,7 @@ function BridgeInner() {
             isLeftSidebarOpen ? "md:translate-x-6 lg:translate-x-10" : "translate-x-0"
           }`}
         >
-          <SquidMark />
+          <BwickMark />
           <span className="text-[#e8e6ef]">
             <MenuIcon />
           </span>

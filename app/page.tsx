@@ -76,12 +76,6 @@ export default function HomePage() {
                 >
                   Bridge
                 </Link>
-                <a
-                  href="#"
-                  className="inline-flex h-11 items-center rounded-full bg-white px-7 text-[15px] font-normal text-[#111111] shadow-sm transition hover:bg-white/90"
-                >
-                  Start Building
-                </a>
               </div>
             </div>
           </div>
