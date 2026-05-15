@@ -23,7 +23,7 @@ export default function HomePage() {
         </div>
 
         <div className="relative z-10 flex h-full flex-col">
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-40 flex justify-center px-0 sm:top-[-3vh] sm:px-6 lg:top-[-4vh]">
+          <div className="pointer-events-none absolute inset-x-0 top-[-6vh] z-40 flex justify-center px-0 sm:top-[-9vh] sm:px-6 lg:top-[-10vh]">
             <div className="relative aspect-[1400/900] w-[min(80vw,420px)] max-w-none sm:w-full sm:max-w-[400px] md:max-w-[500px] lg:max-w-[720px] xl:max-w-[860px] 2xl:max-w-[1000px]">
 <Image
                 src="/7356fd7d-d9de-4b61-9b9e-6dc63b7e58a4.webp"
@@ -36,18 +36,6 @@ export default function HomePage() {
               />
             </div>
           </div>
-
-          <header className="relative z-20 flex items-center px-5 pt-5">
-            <div>
-              <Image
-                src="/bwick.webp"
-                alt="BWICK"
-                width={37}
-                height={37}
-                className="h-[37px] w-[37px] object-contain"
-              />
-            </div>
-          </header>
 
           <div className="relative z-30 flex flex-1 flex-col items-center justify-end pb-[10vh] text-center">
             <div className="flex flex-col items-center">
